@@ -14,4 +14,8 @@ app.get('/health', (req, res) => {
     res.json({ status: 'ok' });
 });
 
+app.get('/exp', (req, res) => {
+    res.json({ status: 'ok' });
+});
+
 export default app;
