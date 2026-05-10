@@ -1,21 +1,12 @@
-import express from 'express';
+import express from "express";
+import questRoutes from "./routes/questRoutes";
 
 const app = express();
-const PORT = process.env.PORT || 3000;
-
 
 app.use(express.json());
 
-app.get('/', (req, res) => {
-    res.json({ message: 'Welcome to DevQuest!' });
-});
-
-app.get('/health', (req, res) => {
-    res.json({ status: 'ok' });
-});
-
-app.get('/exp', (req, res) => {
-    res.json({ status: 'ok' });
-});
+app.use("/quests", questRoutes);
+// app.use("/users", userRoutes);
+// app.use("/auth", authRoutes);
 
 export default app;
