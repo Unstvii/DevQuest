@@ -7,10 +7,158 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
+enum QuestType {
+  NORMAL
+  BOSS
+}
+
+
+enum QuestStatus {
+  ACTIVE      
+  COMPLETED   
+  FAILED     
+  ARCHIVED    
+}
+
+
+enum AchievementCategory {
+  QUESTS    
+  BOSS      
+  LEVEL     
+  XP        
+  STREAK    
+  GENERAL   
+}
+
+
+enum ConditionType {
+  QUESTS_COMPLETED        
+  BOSS_QUESTS_COMPLETED   
+  TOTAL_QUESTS_COMPLETED  
+  LEVEL_REACHED          
+  XP_EARNED               
+  DAYS_STREAK            
+}
+
+
+
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  username     String   @unique
+  passwordHash String
+  xp    Int @default(0)
+  level Int @default(1)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+
+  refreshTokens      RefreshToken[]
+  quests             Quest[]
+  stats              UserStats?
+  userAchievements   UserAchievement[]
+  customAchievements CustomAchievement[]
+
+  @@index([email])
+  @@index([username])
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  used      Boolean  @default(false)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([token])
+}
+
+
+
+
 model Quest {
-  id          Int      @id @default(autoincrement())
+  id          String      @id @default(cuid())
+  userId      String
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   title       String
+  description String?
+  xpReward    Int
+  type        QuestType   @default(NORMAL)
+  status      QuestStatus @default(ACTIVE)
+  dueDate     DateTime?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  completedAt DateTime?
+
+  @@index([userId, status])
+  @@index([userId, type])
+}
+
+
+model UserStats {
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  totalQuestsCompleted  Int @default(0)
+  totalBossesDefeated   Int @default(0)
+  currentStreak         Int @default(0)
+  longestStreak         Int @default(0)
+  totalXpEarned         Int @default(0)
+  lastActiveDate DateTime?
+  updatedAt      DateTime  @updatedAt
+}
+
+model Achievement {
+  id          String              @id @default(cuid())
+  key         String              @unique
+  name        String
   description String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  emoji       String
+  category    AchievementCategory @default(GENERAL)
+  conditionType  ConditionType
+  conditionValue Int
+  isSecret Boolean @default(false)
+
+  createdAt DateTime @default(now())
+
+  userAchievements UserAchievement[]
+
+  @@index([key])
+  @@index([category])
+}
+
+model UserAchievement {
+  id            String      @id @default(cuid())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievementId String
+  achievement   Achievement @relation(fields: [achievementId], references: [id])
+  unlockedAt    DateTime    @default(now())
+
+  @@unique([userId, achievementId])
+  @@index([userId])
+}
+
+model CustomAchievement {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  name        String
+  description String
+  emojiCode   String
+
+  isUnlocked Boolean  @default(false)
+  unlockedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
 }

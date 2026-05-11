@@ -4,7 +4,6 @@ import { QuestService } from "../services/questService";
 
 const questRoutes = Router();
 
-// Dependency injection: сервіс → контролер
 const questController = new QuestController(new QuestService());
 
 questRoutes.get("/", questController.getAll);

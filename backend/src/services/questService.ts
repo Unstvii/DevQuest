@@ -15,7 +15,6 @@ export class QuestService {
   }
 
   async update(id: number, data: UpdateQuestDto) {
-    // Перевіряємо чи існує запис перед оновленням
     const existing = await prisma.quest.findUnique({ where: { id } });
     if (!existing) return null;
 
