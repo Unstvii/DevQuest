@@ -1,5 +1,5 @@
 import express from "express";
-import questRoutes from "./routes/questRoutes";
+// import questRoutes from "./routes/questRoutes";
 import authRoutes from "./routes/authRoutes";
 const app = express();
 

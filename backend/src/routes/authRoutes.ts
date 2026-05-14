@@ -8,7 +8,7 @@ const authRoutes = Router();
 const service = new authService();
 const controller = new authController(service)
 
-authRoutes.post("/", controller.register);
-
+authRoutes.post("/register", controller.register);
+authRoutes.post("/login", controller.login);
 
 export default authRoutes;

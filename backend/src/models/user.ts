@@ -1,9 +1,9 @@
 export interface User {
     email: string,
     username: string,
-    password: string,
+    passwordHash: string,
     xp: number,
     level: number
 }
 
-export type UserAuthDto = Pick<User, "email" | "password" | "username">
+export type UserAuthDto = Pick<User, "email" | "passwordHash" | "username">

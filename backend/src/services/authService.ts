@@ -1,6 +1,7 @@
 import prisma from "../prisma/prismaClient";
 import { UserAuthDto } from "../models/user";
 import bcrypt from "bcrypt";
+import { User } from "@prisma/client";
 
 class authService {
     findUsername = async (username: string) => {
@@ -18,7 +19,7 @@ class authService {
         if (existingEmail) {
             throw new Error("Email is already taken");
         }
-        const hashedPassword = await bcrypt.hash(user.password, 10);
+        const hashedPassword = await bcrypt.hash(user.passwordHash, 10);
         const newUser = await prisma.user.create({
             data: {
                 username: user.username,
@@ -29,6 +30,20 @@ class authService {
             }
         })
         const { passwordHash, ...UserWithoutPassword } = newUser;
+        return UserWithoutPassword;
+    }
+    login = async (user: User) => {
+
+        const findUser = await this.findUseremail(user.email);
+        if (!findUser) {
+            throw new Error("Email not found");
+        }
+        console.log(user)
+        const checkPassword = await bcrypt.compare(user.passwordHash, findUser.passwordHash);
+        if (!checkPassword) {
+            throw new Error("Wrong password!");
+        }
+        const { passwordHash, ...UserWithoutPassword } = findUser;
         return UserWithoutPassword;
     }
 }

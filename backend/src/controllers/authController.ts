@@ -24,6 +24,16 @@ class authController {
 
 
     }
+    login = async (req: Request, res: Response): Promise<void> => {
+        try {
+            const user = await this.authService.login(req.body);
+            res.status(201).json({ message: "Success login!", user });
+        } catch (error) {
+            if (error instanceof Error) {
+                console.error(error.message)
+            }
+        }
+    }
 
 }
 
