@@ -26,11 +26,21 @@ class authController {
     }
     login = async (req: Request, res: Response): Promise<void> => {
         try {
-            const user = await this.authService.login(req.body);
-            res.status(201).json({ message: "Success login!", user });
+            const { accessToken, refreshToken } = await this.authService.login(req.body);
+
+            res.cookie("refreshToken", refreshToken, {
+                httpOnly: true,
+                secure: false,
+                sameSite: "strict",
+                maxAge: 7 * 24 * 60 * 60 * 1000
+            })
+
+            res.status(201).json({ message: "Success login!", accessToken });
         } catch (error) {
             if (error instanceof Error) {
-                console.error(error.message)
+                res.status(400).json({ message: error.message })
+            } else {
+                res.status(500).json({ message: "Internal server error" })
             }
         }
     }
