@@ -1,9 +1,13 @@
 export interface User {
-    email: string,
-    username: string,
-    passwordHash: string,
-    xp: number,
-    level: number
+  email: string;
+  username: string;
+  passwordHash: string;
+  xp: number;
+  level: number;
 }
 
-export type UserAuthDto = Pick<User, "email" | "passwordHash" | "username">
+export type UserAuthDto = {
+  username: string;
+  email: string;
+  password: string;
+};
