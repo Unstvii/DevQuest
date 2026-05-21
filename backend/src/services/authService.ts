@@ -54,16 +54,11 @@ class authService {
   createToken = async (
     user: User,
   ): Promise<{ accessToken: string; refreshToken: string }> => {
-    const payloadShort = {
+    const payload = {
       id: user.id,
     };
-    const payload = {
-      username: user.username,
-      xp: user.xp,
-      level: user.level,
-      email: user.email,
-    };
-    const accessToken = jwt.sign(payloadShort, this.ACCESS_SECRET, {
+
+    const accessToken = jwt.sign(payload, this.ACCESS_SECRET, {
       expiresIn: "15m",
     });
     const refreshToken = jwt.sign(payload, this.REFRESH_SECRET, {
