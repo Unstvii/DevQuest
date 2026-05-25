@@ -4,8 +4,15 @@ import authRoutes from "./routes/authRoutes";
 import userRoutes from "./routes/userRoutes";
 import cookieParser from "cookie-parser";
 import authMiddleware from "./middleware/auth.middleware";
-const app = express();
+import cors from "cors";
 
+const app = express();
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
+  }),
+);
 app.use(express.json());
 app.use(cookieParser());
 app.use("/auth", authRoutes);
