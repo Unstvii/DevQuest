@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { loginSchema, type LoginFormData } from "../../utils/shemas";
-import { authService } from "@/app/services/authService/auth.service";
+import { authService } from "../../services/authService/auth.service";
 import { useAuthStore } from "@/store/auth/auth.store";
 
 export default function LoginForm() {
@@ -19,7 +19,8 @@ export default function LoginForm() {
   const onSubmit = async (userLoginData: LoginFormData) => {
     try {
       const response = await authService.login(userLoginData);
-      setAccessToken(response.data.accessTooken);
+      setAccessToken(response.data.accessToken);
+      console.log(response.data.accessToken);
       toast.success("Ласкаво просимо!");
     } catch (error) {
       toast.error("Невірний email або пароль");

@@ -1,4 +1,5 @@
-import api from "./axios";
+import api from "../axios";
+
 import { LoginFormData, RegisterFormData } from "@/utils/shemas";
 
 export const authService = {
