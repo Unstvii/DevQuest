@@ -6,8 +6,10 @@ import { toast } from "sonner";
 import { loginSchema, type LoginFormData } from "../../utils/shemas";
 import { authService } from "../../services/authService/auth.service";
 import { useAuthStore } from "@/store/auth/auth.store";
+import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -21,7 +23,10 @@ export default function LoginForm() {
       const response = await authService.login(userLoginData);
       setAccessToken(response.data.accessToken);
       console.log(response.data.accessToken);
+
       toast.success("Ласкаво просимо!");
+
+      router.push("/profile");
     } catch (error) {
       toast.error("Невірний email або пароль");
     }

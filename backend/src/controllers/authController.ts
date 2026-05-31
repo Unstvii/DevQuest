@@ -32,11 +32,17 @@ class authController {
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
         secure: false,
-        sameSite: "strict",
+        sameSite: "lax",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
+      res.cookie("accessToken", accessToken, {
+        httpOnly: true,
+        secure: false,
+        sameSite: "lax",
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
 
-      res.status(201).json({ message: "Success login!", accessToken });
+      res.status(201).json({ message: "Success login!" });
     } catch (error) {
       if (error instanceof Error) {
         res.status(400).json({ message: error.message });
