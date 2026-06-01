@@ -1,29 +1,24 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { useAuthStore } from "@/store/auth/auth.store";
-
 import { userService } from "@/services/userService/user.service";
 import { useUserStore } from "@/store/user/userProfile.store";
 
 const UserProfile = () => {
-  const { accessToken } = useAuthStore();
-  const { setUserProfile, clearUserProfile, username, email, xp, level } =
+  const { setUserProfile, clearUserProfile, email, username, xp, level } =
     useUserStore();
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        console.log(accessToken);
-        const user = await userService.getMe(accessToken);
+        const user = await userService.getMe();
         setUserProfile(user);
       } catch (error) {
-        console.error("Failed to fetch user:", error);
         clearUserProfile();
       }
     };
-
     fetchUser();
-  }, [accessToken]);
+  }, []);
   return (
     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72">
       <div

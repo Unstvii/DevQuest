@@ -5,7 +5,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { loginSchema, type LoginFormData } from "../../utils/shemas";
 import { authService } from "../../services/authService/auth.service";
-import { useAuthStore } from "@/store/auth/auth.store";
 import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
@@ -17,11 +16,9 @@ export default function LoginForm() {
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   });
-  const { setAccessToken } = useAuthStore();
   const onSubmit = async (userLoginData: LoginFormData) => {
     try {
       const response = await authService.login(userLoginData);
-      setAccessToken(response.data.accessToken);
       console.log(response.data.accessToken);
 
       toast.success("Ласкаво просимо!");

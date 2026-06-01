@@ -2,10 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 
 const PUBLIC_ROUTES = ["/login", "/register"];
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
-
   const token = request.cookies.get("accessToken")?.value;
+
+  if (PUBLIC_ROUTES.includes(pathname) && token) {
+    return NextResponse.redirect(new URL("/profile", request.url));
+  }
 
   if (PUBLIC_ROUTES.includes(pathname)) {
     return NextResponse.next();

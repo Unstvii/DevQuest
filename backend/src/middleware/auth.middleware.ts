@@ -3,8 +3,7 @@ import jwt from "jsonwebtoken";
 
 const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const access_secret = process.env.ACCESS_SECRET!;
-
-  const token = req.headers.authorization?.split(" ")[1];
+  const token = req.cookies.accessToken;
   if (!token) return res.status(401).json({ message: "No token" });
 
   try {
