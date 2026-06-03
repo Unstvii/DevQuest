@@ -51,6 +51,19 @@ class authController {
       }
     }
   };
+  logout = async (req: Request, res: Response) => {
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+    });
+    res.clearCookie("accessToken", {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+    });
+    res.json({ message: "Logged out" });
+  };
   refreshToken = async (req: Request, res: Response) => {
     try {
       const refreshToken = req.cookies.refreshToken;

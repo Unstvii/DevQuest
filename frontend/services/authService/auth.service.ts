@@ -9,4 +9,7 @@ export const authService = {
   register: (userData: RegisterFormData) => {
     return api.post("/auth/register", userData);
   },
+  logout: () => {
+    return api.post("/auth/logout");
+  },
 };

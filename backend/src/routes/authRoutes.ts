@@ -9,5 +9,6 @@ const controller = new authController(service);
 authRoutes.post("/register", controller.register);
 authRoutes.post("/login", controller.login);
 authRoutes.post("/refresh", controller.refreshToken);
+authRoutes.post("/logout", controller.logout);
 
 export default authRoutes;
