@@ -7,12 +7,10 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 enum QuestType {
   NORMAL
   BOSS
 }
-
 
 enum QuestStatus {
   ACTIVE      
@@ -20,7 +18,6 @@ enum QuestStatus {
   FAILED     
   ARCHIVED    
 }
-
 
 enum AchievementCategory {
   QUESTS    
@@ -31,7 +28,6 @@ enum AchievementCategory {
   GENERAL   
 }
 
-
 enum ConditionType {
   QUESTS_COMPLETED        
   BOSS_QUESTS_COMPLETED   
@@ -41,22 +37,16 @@ enum ConditionType {
   DAYS_STREAK            
 }
 
-
-
-
 model User {
   id           String   @id @default(cuid())
   email        String   @unique
   username     String   @unique
   passwordHash String
-  xp    Int @default(0)
-  level Int @default(1)
+  xp           Int      @default(0)
+  level        Int      @default(1)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-
-  refreshTokens      RefreshToken[]
   quests             Quest[]
   stats              UserStats?
   userAchievements   UserAchievement[]
@@ -65,22 +55,6 @@ model User {
   @@index([email])
   @@index([username])
 }
-
-model RefreshToken {
-  id        String   @id @default(cuid())
-  token     String   @unique
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  used      Boolean  @default(false)
-  expiresAt DateTime
-  createdAt DateTime @default(now())
-
-  @@index([userId])
-  @@index([token])
-}
-
-
-
 
 model Quest {
   id          String      @id @default(cuid())
@@ -100,32 +74,32 @@ model Quest {
   @@index([userId, type])
 }
 
-
 model UserStats {
   id     String @id @default(cuid())
   userId String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  totalQuestsCompleted  Int @default(0)
-  totalBossesDefeated   Int @default(0)
-  currentStreak         Int @default(0)
-  longestStreak         Int @default(0)
-  totalXpEarned         Int @default(0)
+
+  totalQuestsCompleted Int @default(0)
+  totalBossesDefeated  Int @default(0)
+  currentStreak        Int @default(0)
+  longestStreak        Int @default(0)
+  totalXpEarned        Int @default(0)
+
   lastActiveDate DateTime?
   updatedAt      DateTime  @updatedAt
 }
 
 model Achievement {
-  id          String              @id @default(cuid())
-  key         String              @unique
-  name        String
-  description String
-  emoji       String
-  category    AchievementCategory @default(GENERAL)
+  id             String              @id @default(cuid())
+  key            String              @unique
+  name           String
+  description    String
+  emoji          String
+  category       AchievementCategory @default(GENERAL)
   conditionType  ConditionType
   conditionValue Int
-  isSecret Boolean @default(false)
-
-  createdAt DateTime @default(now())
+  isSecret       Boolean             @default(false)
+  createdAt      DateTime            @default(now())
 
   userAchievements UserAchievement[]
 
@@ -153,12 +127,10 @@ model CustomAchievement {
   name        String
   description String
   emojiCode   String
-
-  isUnlocked Boolean  @default(false)
-  unlockedAt DateTime?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  isUnlocked  Boolean   @default(false)
+  unlockedAt  DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
   @@index([userId])
 }

@@ -9,5 +9,5 @@ export interface User {
 export type UserAuthDto = {
   username: string;
   email: string;
-  password: string;
+  passwordHash: string;
 };

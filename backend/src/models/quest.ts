@@ -1,10 +1,11 @@
+import { QuestType } from "@prisma/client";
+
 export interface Quest {
-  id: number;
   title: string;
-  description: string;
-  createdAt: Date;
-  updatedAt: Date;
+  description?: string;
+  xpReward: number;
+  type?: QuestType;
+  dueDate?: Date;
 }
 
-export type CreateQuestDto = Pick<Quest, "title" | "description">;
-export type UpdateQuestDto = Partial<CreateQuestDto>;
+export type UpdateQuestDto = Partial<Quest>;

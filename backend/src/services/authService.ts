@@ -22,12 +22,12 @@ class authService {
     if (existingEmail) {
       throw new Error("Email is already taken");
     }
-    const hashedPassword = await bcrypt.hash(user.password, 10);
+    const hashedPassword = await bcrypt.hash(user.passwordHash, 10);
     const newUser = await prisma.user.create({
       data: {
         username: user.username,
         email: user.email,
-        passwordHash: hashedPassword.toString(),
+        passwordHash: hashedPassword,
         xp: 0,
         level: 1,
       },
