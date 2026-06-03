@@ -10,6 +10,7 @@ class authController {
 
   register = async (req: Request, res: Response): Promise<void> => {
     try {
+      console.log(req.body);
       const user = await this.authService.register(req.body);
       res.status(201).json({ message: "User created", user });
     } catch (error) {

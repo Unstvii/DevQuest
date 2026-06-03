@@ -3,25 +3,27 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { loginSchema, type LoginFormData } from "../../utils/shemas";
 import { authService } from "../../services/authService/auth.service";
 import { useRouter } from "next/navigation";
+import { registerSchema, type RegisterFormData } from "../../utils/shemas";
 import Link from "next/link";
-export default function LoginForm() {
+
+export default function RegisterForm() {
   const router = useRouter();
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
+  } = useForm<RegisterFormData>({
+    resolver: zodResolver(registerSchema),
   });
-  const onSubmit = async (userLoginData: LoginFormData) => {
+  const onSubmit = async (userRegisterData: RegisterFormData) => {
     try {
-      const response = await authService.login(userLoginData);
-      toast.success("Ласкаво просимо!");
+      const { confirmPassword, ...userData } = userRegisterData;
+      const response = await authService.register(userData);
+      toast.success("Реєстрація Успішна!");
 
-      router.push("/profile");
+      router.push("/login");
     } catch (error) {
       toast.error("Невірний email або пароль");
     }
@@ -55,15 +57,42 @@ export default function LoginForm() {
           </svg>
         </div>
         <h1 className="text-base font-semibold text-[var(--color-text-primary)]">
-          Вхід в акаунт
+          Реєстрація Аккаунту
         </h1>
         <p className="text-xs text-[var(--color-text-muted)]">
-          Раді бачити вас знову
+          Раді що обрали нас : )
         </p>
       </div>
 
       {/* Form */}
+
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3">
+        <div className="flex flex-col gap-1">
+          <label className="text-xs font-medium text-[var(--color-text-body)] pl-0.5">
+            Nickname
+          </label>
+          <input
+            {...register("username")}
+            type="text"
+            placeholder="your_nickname"
+            className="
+          w-full px-3 py-2.5 rounded-lg text-sm
+          bg-[var(--color-surface-raised)] text-[var(--color-text-primary)]
+          border border-[var(--color-border)]
+          placeholder:text-[var(--color-text-disabled)]
+          outline-none transition-colors duration-200
+          hover:border-[var(--color-border-hover)]
+          focus:border-[var(--color-border-focus)]
+          focus:ring-2 focus:ring-[var(--color-brand)]/20
+        "
+          />
+          {errors.username && (
+            <span className="text-[11px] text-[var(--color-danger)] pl-0.5 flex items-center gap-1">
+              {errors.username.message}
+            </span>
+          )}
+        </div>
+
         <div className="flex flex-col gap-1">
           <label className="text-xs font-medium text-[var(--color-text-body)] pl-0.5">
             Email
@@ -95,15 +124,9 @@ export default function LoginForm() {
             <label className="text-xs font-medium text-[var(--color-text-body)]">
               Пароль
             </label>
-            {/* пізніше додам відновлення <a
-              href="#"
-              className="text-[11px] text-[var(--color-brand)] hover:text-[var(--color-brand-dark)] transition-colors"
-            >
-              Забули пароль?
-            </a> */}
           </div>
           <input
-            {...register("passwordHash")}
+            {...register("password")}
             type="password"
             placeholder="••••••••"
             className="
@@ -117,13 +140,39 @@ export default function LoginForm() {
           focus:ring-2 focus:ring-[var(--color-brand)]/20
         "
           />
-          {errors.passwordHash && (
+          {errors.password && (
             <span className="text-[11px] text-[var(--color-danger)] pl-0.5 flex items-center gap-1">
-              {errors.passwordHash.message}
+              {errors.password.message}
             </span>
           )}
         </div>
-
+        <div className="flex flex-col gap-1">
+          <div className="flex items-center justify-between pl-0.5">
+            <label className="text-xs font-medium text-[var(--color-text-body)]">
+              Підтвердження паролю
+            </label>
+          </div>
+          <input
+            {...register("confirmPassword")}
+            type="password"
+            placeholder="••••••••"
+            className="
+          w-full px-3 py-2.5 rounded-lg text-sm
+          bg-[var(--color-surface-raised)] text-[var(--color-text-primary)]
+          border border-[var(--color-border)]
+          placeholder:text-[var(--color-text-disabled)]
+          outline-none transition-colors duration-200
+          hover:border-[var(--color-border-hover)]
+          focus:border-[var(--color-border-focus)]
+          focus:ring-2 focus:ring-[var(--color-brand)]/20
+        "
+          />
+          {errors.password && (
+            <span className="text-[11px] text-[var(--color-danger)] pl-0.5 flex items-center gap-1">
+              {errors.password.message}
+            </span>
+          )}
+        </div>
         <button
           type="submit"
           disabled={isSubmitting}
@@ -161,18 +210,17 @@ export default function LoginForm() {
               Завантаження...
             </span>
           ) : (
-            "Увійти"
+            "Зареєструватись"
           )}
         </button>
       </form>
-
       <p className="text-center text-[11px] text-[var(--color-text-muted)]">
-        Немає акаунту?{" "}
+        Вже є аккаунт?{" "}
         <Link
-          href="/register"
+          href="/login"
           className="text-[var(--color-brand)] hover:text-[var(--color-brand-dark)] font-medium transition-colors"
         >
-          Зареєструватись
+          Увійти
         </Link>
       </p>
     </div>

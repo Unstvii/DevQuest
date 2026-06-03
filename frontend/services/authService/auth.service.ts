@@ -6,7 +6,7 @@ export const authService = {
   login: (userData: LoginFormData) => {
     return api.post("/auth/login", userData);
   },
-  register: (userData: RegisterFormData) => {
+  register: (userData: Omit<RegisterFormData, "confirmPassword">) => {
     return api.post("/auth/register", userData);
   },
   logout: () => {
