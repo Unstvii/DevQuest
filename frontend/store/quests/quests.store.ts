@@ -1,11 +1,20 @@
 import { create } from "zustand";
 
-export default interface Quest {
+export type QuestType = "DEFAULT" | "BOSS";
+
+export interface Quest {
   id: string;
   title: string;
   xpReward: number;
   description: string | null;
-  type: "BOSS" | "DEFAULT";
+  type: QuestType;
+}
+
+export interface NewQuestPayload {
+  title: string;
+  xpReward: number;
+  description: string | null;
+  type: QuestType;
 }
 
 interface QuestStore {
