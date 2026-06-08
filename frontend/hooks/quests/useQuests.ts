@@ -3,7 +3,7 @@ import { useQuestStore } from "@/store/quests/quests.store";
 import { questService } from "@/services/questService/quest.service";
 import { Quest } from "@/store/quests/quests.store";
 
-export function useQuests() {
+const useQuests = () => {
   const { quests, setQuests } = useQuestStore();
   const [search, setSearch] = useState("");
   const [completed, setCompleted] = useState<Set<string>>(new Set());
@@ -29,8 +29,13 @@ export function useQuests() {
     });
   };
 
-  const addQuest = (quest: Quest) => {
-    setQuests([...quests, quest]);
+  const addQuest = async (quest: Quest) => {
+    try {
+      const createdQuest = await questService.createQuest(quest);
+      setQuests([...quests, createdQuest.data]);
+    } catch (error) {
+      console.error("[useQuests] Failed to create quests:", error);
+    }
   };
 
   const filteredQuests = quests.filter((q) =>
@@ -46,4 +51,6 @@ export function useQuests() {
     toggleCompleted,
     addQuest,
   };
-}
+};
+
+export default useQuests;

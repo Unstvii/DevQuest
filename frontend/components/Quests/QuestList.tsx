@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { useQuests } from "@/hooks/quests/useQuests";
+import useQuests from "@/hooks/quests/useQuests";
 import QuestCard from "./QuestCard";
 import QuestModal from "./QuestModal";
 
