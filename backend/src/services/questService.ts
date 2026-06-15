@@ -2,8 +2,12 @@ import prisma from "../prisma/prismaClient";
 import { Quest, UpdateQuestDto } from "../models/quest";
 
 export class QuestService {
-  async getAll() {
-    return await prisma.quest.findMany();
+  async getAll(id: string) {
+    return await prisma.quest.findMany({
+      where: {
+        userId: id,
+      },
+    });
   }
 
   async getById(id: string) {
@@ -22,11 +26,30 @@ export class QuestService {
     });
   }
 
-  async update(id: string, data: UpdateQuestDto) {
-    const existing = await prisma.quest.findUnique({ where: { id } });
+  async update(id: string, userId: string, data: UpdateQuestDto) {
+    const existing = await prisma.quest.findFirst({
+      where: {
+        id: id,
+        userId: userId,
+      },
+    });
     if (!existing) return null;
 
     return await prisma.quest.update({ where: { id }, data });
+  }
+  async updateQuestStatus(
+    id: string,
+    userId: string,
+    data: Pick<UpdateQuestDto, "status">,
+  ) {
+    const existing = await prisma.quest.findFirst({
+      where: {
+        id: id,
+        userId: userId,
+      },
+    });
+    if (!existing) return null;
+    return prisma.quest.update({ where: { id }, data });
   }
 
   async delete(id: string) {

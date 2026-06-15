@@ -8,14 +8,14 @@ import type {
 
 interface AddQuestModalProps {
   onClose: () => void;
-  onAdd: (quest: Quest) => void;
+  onAdd: (quest: Omit<Quest, "id">) => void;
 }
 
 const INITIAL_FORM: NewQuestPayload = {
   title: "",
   description: "",
   xpReward: 100,
-  type: "DEFAULT",
+  type: "NORMAL",
 };
 
 const QuestModal = ({ onClose, onAdd }: AddQuestModalProps) => {
@@ -31,10 +31,10 @@ const QuestModal = ({ onClose, onAdd }: AddQuestModalProps) => {
   const handleSubmit = () => {
     if (!form.title.trim()) return;
     onAdd({
-      id: crypto.randomUUID(),
       ...form,
       title: form.title.trim(),
       description: form.description ? form.description.trim() : null,
+      status: "ACTIVE",
     });
     onClose();
   };
@@ -159,7 +159,7 @@ const QuestModal = ({ onClose, onAdd }: AddQuestModalProps) => {
               Тип
             </label>
             <div className="flex gap-2">
-              {(["DEFAULT", "BOSS"] as QuestType[]).map((t) => (
+              {(["NORMAL", "BOSS"] as QuestType[]).map((t) => (
                 <button
                   key={t}
                   onClick={() => handleChange("type", t)}
@@ -185,7 +185,7 @@ const QuestModal = ({ onClose, onAdd }: AddQuestModalProps) => {
                         : "var(--color-text-muted)",
                   }}
                 >
-                  {t === "BOSS" ? "⚔ Boss" : "Default"}
+                  {t === "BOSS" ? "⚔ Boss" : "NORMAL"}
                 </button>
               ))}
             </div>

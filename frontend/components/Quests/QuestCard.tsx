@@ -4,14 +4,17 @@ import { Quest } from "@/store/quests/quests.store";
 
 interface QuestCardProps {
   quest: Quest;
-  completed: boolean;
   onToggle: (id: string) => void;
 }
 
-const QuestCard = ({ quest, completed, onToggle }: QuestCardProps) => {
+const QuestCard = ({ quest, onToggle }: QuestCardProps) => {
   const [expanded, setExpanded] = useState(false);
 
+  const completed = quest.status === "COMPLETED";
+  const archived = quest.status === "ARCHIVED";
   const isBoss = quest.type === "BOSS";
+  const isInactive = completed || archived;
+
   const shortDesc = quest.description?.slice(0, 80);
   const hasMore = (quest.description?.length ?? 0) > 80;
 
@@ -20,27 +23,31 @@ const QuestCard = ({ quest, completed, onToggle }: QuestCardProps) => {
       onClick={() => setExpanded((prev) => !prev)}
       className="rounded-2xl border transition-all duration-300 cursor-pointer"
       style={{
-        background: completed
+        background: isInactive
           ? "var(--color-surface-raised)"
           : "var(--color-surface)",
         borderColor: completed
           ? "var(--color-success)"
-          : expanded
-            ? "var(--color-border-focus)"
-            : "var(--color-border)",
+          : archived
+            ? "var(--color-border)"
+            : expanded
+              ? "var(--color-border-focus)"
+              : "var(--color-border)",
         padding: "1.25rem 1.5rem",
-        opacity: completed ? 0.7 : 1,
+        opacity: isInactive ? 0.7 : 1,
       }}
       onMouseEnter={(e) => {
-        if (!completed)
+        if (!isInactive)
           e.currentTarget.style.borderColor = "var(--color-border-hover)";
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.borderColor = completed
           ? "var(--color-success)"
-          : expanded
-            ? "var(--color-border-focus)"
-            : "var(--color-border)";
+          : archived
+            ? "var(--color-border)"
+            : expanded
+              ? "var(--color-border-focus)"
+              : "var(--color-border)";
       }}
     >
       <div className="flex items-start justify-between gap-4">
@@ -95,10 +102,21 @@ const QuestCard = ({ quest, completed, onToggle }: QuestCardProps) => {
                 ⚔ Boss
               </span>
             )}
+            {archived && (
+              <span
+                className="text-xs font-semibold px-2.5 py-0.5 rounded-full tracking-wide uppercase"
+                style={{
+                  background: "var(--color-surface-overlay)",
+                  color: "var(--color-text-muted)",
+                }}
+              >
+                Архів
+              </span>
+            )}
             <h3
               className="font-semibold text-base transition-all duration-200"
               style={{
-                color: completed
+                color: isInactive
                   ? "var(--color-text-muted)"
                   : "var(--color-text-primary)",
                 textDecoration: completed ? "line-through" : "none",
@@ -142,6 +160,7 @@ const QuestCard = ({ quest, completed, onToggle }: QuestCardProps) => {
           </svg>
         </div>
       </div>
+
       {!expanded && quest.description && (
         <p
           className="mt-2 text-sm leading-relaxed ml-9"
@@ -153,6 +172,7 @@ const QuestCard = ({ quest, completed, onToggle }: QuestCardProps) => {
           )}
         </p>
       )}
+
       {expanded && (
         <div className="mt-4 ml-9 space-y-4">
           {quest.description && (
@@ -187,56 +207,58 @@ const QuestCard = ({ quest, completed, onToggle }: QuestCardProps) => {
               </span>
             </span>
 
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onToggle(quest.id);
-              }}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-medium text-xs transition-all duration-200 cursor-pointer"
-              style={{
-                background: completed
-                  ? "rgba(16,185,129,0.12)"
-                  : "rgba(99,102,241,0.12)",
-                color: completed
-                  ? "var(--color-success)"
-                  : "var(--color-brand)",
-                border: `1px solid ${completed ? "rgba(16,185,129,0.25)" : "rgba(99,102,241,0.25)"}`,
-              }}
-            >
-              {completed ? (
-                <>
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                    <path
-                      d="M2 6l3 3 5-5"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                  Виконано
-                </>
-              ) : (
-                <>
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                    <circle
-                      cx="6"
-                      cy="6"
-                      r="4.5"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                    />
-                    <path
-                      d="M6 4v2l1.5 1.5"
-                      stroke="currentColor"
-                      strokeWidth="1.2"
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                  Завершити квест
-                </>
-              )}
-            </button>
+            {!archived && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onToggle(quest.id);
+                }}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-medium text-xs transition-all duration-200 cursor-pointer"
+                style={{
+                  background: completed
+                    ? "rgba(16,185,129,0.12)"
+                    : "rgba(99,102,241,0.12)",
+                  color: completed
+                    ? "var(--color-success)"
+                    : "var(--color-brand)",
+                  border: `1px solid ${completed ? "rgba(16,185,129,0.25)" : "rgba(99,102,241,0.25)"}`,
+                }}
+              >
+                {completed ? (
+                  <>
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                      <path
+                        d="M2 6l3 3 5-5"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                    Виконано
+                  </>
+                ) : (
+                  <>
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                      <circle
+                        cx="6"
+                        cy="6"
+                        r="4.5"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                      />
+                      <path
+                        d="M6 4v2l1.5 1.5"
+                        stroke="currentColor"
+                        strokeWidth="1.2"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                    Завершити квест
+                  </>
+                )}
+              </button>
+            )}
           </div>
         </div>
       )}

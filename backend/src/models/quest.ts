@@ -4,8 +4,9 @@ export interface Quest {
   title: string;
   description?: string;
   xpReward: number;
-  type?: QuestType;
+  type: QuestType;
   dueDate?: Date;
+  status: "ACTIVE" | "COMPLETED" | "FAILED" | "ARCHIVED";
 }
 
 export type UpdateQuestDto = Partial<Quest>;

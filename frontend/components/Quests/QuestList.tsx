@@ -11,7 +11,7 @@ const QuestList = () => {
     search,
     setSearch,
     completed,
-    toggleCompleted,
+    updateQuestStatus,
     addQuest,
   } = useQuests();
   const [showModal, setShowModal] = useState(false);
@@ -153,8 +153,12 @@ const QuestList = () => {
             <QuestCard
               key={quest.id}
               quest={quest}
-              completed={completed.has(quest.id)}
-              onToggle={toggleCompleted}
+              onToggle={() =>
+                updateQuestStatus(
+                  quest.id,
+                  quest.status === "COMPLETED" ? "ACTIVE" : "COMPLETED",
+                )
+              }
             />
           ))}
         </div>

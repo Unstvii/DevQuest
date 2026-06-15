@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
-import { useQuestStore } from "@/store/quests/quests.store";
-import { questService } from "@/services/questService/quest.service";
+import {
+  QuestUpdate,
+  useQuestStore,
+  QuestStatus,
+} from "@/store/quests/quests.store";
+import { questService } from "../../services/questService/quest.service";
 import { Quest } from "@/store/quests/quests.store";
 
 const useQuests = () => {
@@ -21,20 +25,38 @@ const useQuests = () => {
     fetchQuests();
   }, []);
 
-  const toggleCompleted = (id: string) => {
-    setCompleted((prev) => {
-      const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
-      return next;
-    });
+  const updateQuestStatus = async (id: string, status: QuestStatus) => {
+    try {
+      const updated = await questService.updateQuestStatus(id, status);
+      setQuests((prev) =>
+        prev.map((q) => (q.id === id ? updated.data.quest : q)),
+      );
+    } catch (error) {
+      console.error(
+        `[useQuests] Failed to update quest status to ${status}:`,
+        error,
+      );
+    }
   };
 
-  const addQuest = async (quest: Quest) => {
+  const addQuest = async (quest: Omit<Quest, "id">) => {
     try {
       const createdQuest = await questService.createQuest(quest);
       setQuests([...quests, createdQuest.data]);
     } catch (error) {
       console.error("[useQuests] Failed to create quests:", error);
+    }
+  };
+  const updateQuest = async (quest: QuestUpdate) => {
+    try {
+      const updatedQuest = await questService.updateQuest(quest);
+      setQuests(
+        quests.map((quest) =>
+          quest.id === updatedQuest.data.id ? updatedQuest.data : quest,
+        ),
+      );
+    } catch (error) {
+      console.error("[useQuests] Failed to update quests:", error);
     }
   };
 
@@ -48,7 +70,7 @@ const useQuests = () => {
     search,
     setSearch,
     completed,
-    toggleCompleted,
+    updateQuestStatus,
     addQuest,
   };
 };

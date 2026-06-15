@@ -10,7 +10,7 @@ export class QuestController {
 
   getAll = async (req: Request, res: Response): Promise<void> => {
     try {
-      const quests = await this.questService.getAll();
+      const quests = await this.questService.getAll(req.user!.id);
       res.json(quests);
     } catch (error) {
       res.status(500).json({ message: "Server error" });
@@ -45,7 +45,8 @@ export class QuestController {
   update = async (req: Request, res: Response): Promise<void> => {
     try {
       const id = req.params.id;
-      const quest = await this.questService.update(id, req.body);
+      const userId = req.user!.id;
+      const quest = await this.questService.update(id, userId, req.body);
 
       if (!quest) {
         res.status(404).json({ message: "Quest not found" });
@@ -55,6 +56,20 @@ export class QuestController {
       res.json(quest);
     } catch (error) {
       res.status(500).json({ message: "Server error" });
+    }
+  };
+  updateQuestStatus = async (req: Request, res: Response) => {
+    try {
+      const id = req.params.id;
+      const userId = req.user!.id;
+      const updatedQuest = await this.questService.updateQuestStatus(
+        id,
+        userId,
+        req.body,
+      );
+      return res.status(200).json({ quest: updatedQuest });
+    } catch (error) {
+      return res.status(400).json({ message: "Quest not updated" });
     }
   };
 
