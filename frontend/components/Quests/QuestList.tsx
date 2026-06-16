@@ -13,9 +13,10 @@ const QuestList = () => {
     completed,
     updateQuestStatus,
     addQuest,
+    doneQuestCounter,
   } = useQuests();
   const [showModal, setShowModal] = useState(false);
-
+  const doneQuests = doneQuestCounter();
   return (
     <>
       {showModal && (
@@ -43,7 +44,7 @@ const QuestList = () => {
             className="text-sm mb-3"
             style={{ color: "var(--color-text-muted)" }}
           >
-            {completed.size} з {quests.length} виконано
+            {doneQuests.done} з {doneQuests.len} виконано
           </p>
           <div
             className="mx-auto w-32 h-1.5 rounded-full overflow-hidden"

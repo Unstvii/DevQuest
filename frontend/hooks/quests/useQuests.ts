@@ -47,6 +47,16 @@ const useQuests = () => {
       console.error("[useQuests] Failed to create quests:", error);
     }
   };
+
+  const doneQuestCounter = () => {
+    return {
+      len: quests.length,
+      done: quests.reduce(
+        (acc, quest) => (quest.status === "COMPLETED" ? acc + 1 : acc),
+        0,
+      ),
+    };
+  };
   const updateQuest = async (quest: QuestUpdate) => {
     try {
       const updatedQuest = await questService.updateQuest(quest);
@@ -72,6 +82,7 @@ const useQuests = () => {
     completed,
     updateQuestStatus,
     addQuest,
+    doneQuestCounter,
   };
 };
 
