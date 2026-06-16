@@ -4,19 +4,34 @@ import useQuests from "@/hooks/quests/useQuests";
 import QuestCard from "./QuestCard";
 import QuestModal from "./QuestModal";
 
+const TABS = [
+  { key: "ALL", label: "Всі" },
+  { key: "ACTIVE", label: "Active" },
+  { key: "COMPLETED", label: "Done" },
+  { key: "ARCHIVED", label: "Archived" },
+];
+
 const QuestList = () => {
   const {
     filteredQuests,
     quests,
     search,
     setSearch,
-    completed,
     updateQuestStatus,
     addQuest,
     doneQuestCounter,
   } = useQuests();
+
   const [showModal, setShowModal] = useState(false);
+  const [statusFilter, setStatusFilter] = useState("ALL");
+
   const doneQuests = doneQuestCounter();
+
+  const statusFilteredQuests =
+    statusFilter === "ALL"
+      ? filteredQuests
+      : filteredQuests.filter((q) => q.status === statusFilter);
+
   return (
     <>
       {showModal && (
@@ -34,18 +49,21 @@ const QuestList = () => {
           >
             Виконуй — отримуй XP
           </p>
+
           <h1
             className="text-4xl font-bold tracking-tight mb-2"
             style={{ color: "var(--color-text-primary)" }}
           >
             Квести
           </h1>
+
           <p
             className="text-sm mb-3"
             style={{ color: "var(--color-text-muted)" }}
           >
             {doneQuests.done} з {doneQuests.len} виконано
           </p>
+
           <div
             className="mx-auto w-32 h-1.5 rounded-full overflow-hidden"
             style={{ background: "var(--color-surface-overlay)" }}
@@ -54,7 +72,7 @@ const QuestList = () => {
               className="h-full rounded-full transition-all duration-500"
               style={{
                 width: quests.length
-                  ? `${(completed.size / quests.length) * 100}%`
+                  ? `${(doneQuests.done / doneQuests.len) * 100}%`
                   : "0%",
                 background: "var(--color-success)",
               }}
@@ -68,34 +86,7 @@ const QuestList = () => {
               background: "var(--color-surface)",
               borderColor: "var(--color-border)",
             }}
-            onFocusCapture={(e) =>
-              (e.currentTarget.style.borderColor = "var(--color-border-focus)")
-            }
-            onBlurCapture={(e) =>
-              (e.currentTarget.style.borderColor = "var(--color-border)")
-            }
           >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-              style={{ color: "var(--color-text-muted)", flexShrink: 0 }}
-            >
-              <circle
-                cx="7"
-                cy="7"
-                r="4.5"
-                stroke="currentColor"
-                strokeWidth="1.5"
-              />
-              <path
-                d="M10.5 10.5L13 13"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-              />
-            </svg>
             <input
               type="text"
               placeholder="Пошук квестів..."
@@ -104,45 +95,51 @@ const QuestList = () => {
               className="flex-1 bg-transparent outline-none text-sm"
               style={{ color: "var(--color-text-primary)" }}
             />
-            {search && (
-              <button
-                onClick={() => setSearch("")}
-                className="cursor-pointer"
-                style={{ color: "var(--color-text-muted)" }}
-              >
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                  <path
-                    d="M3 3l8 8M11 3l-8 8"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                  />
-                </svg>
-              </button>
-            )}
           </div>
 
           <button
             onClick={() => setShowModal(true)}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 cursor-pointer shrink-0"
+            className="px-4 py-2.5 rounded-xl text-sm font-semibold cursor-pointer"
             style={{
               background: "var(--color-brand)",
               color: "white",
             }}
           >
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path
-                d="M8 3v10M3 8h10"
-                stroke="white"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-              />
-            </svg>
             Новий квест
           </button>
         </div>
+        <div className="w-full max-w-2xl mb-6 relative">
+          <div className="flex gap-2 relative">
+            {TABS.map((tab) => {
+              const active = statusFilter === tab.key;
+
+              return (
+                <button
+                  key={tab.key}
+                  onClick={() => setStatusFilter(tab.key)}
+                  className="relative px-4 py-2 text-sm font-medium rounded-full transition-all"
+                  style={{
+                    color: active
+                      ? "var(--color-brand)"
+                      : "var(--color-text-muted)",
+                  }}
+                >
+                  {tab.label}
+                  <span
+                    className="absolute left-0 -bottom-1 h-[2px] w-full rounded-full transition-all duration-300"
+                    style={{
+                      background: "var(--color-brand)",
+                      transform: active ? "scaleX(1)" : "scaleX(0)",
+                      opacity: active ? 1 : 0,
+                    }}
+                  />
+                </button>
+              );
+            })}
+          </div>
+        </div>
         <div className="w-full max-w-2xl flex flex-col gap-3">
-          {filteredQuests.length === 0 && (
+          {statusFilteredQuests.length === 0 && (
             <p
               className="text-center py-10 text-sm"
               style={{ color: "var(--color-text-muted)" }}
@@ -150,7 +147,8 @@ const QuestList = () => {
               Квестів не знайдено
             </p>
           )}
-          {filteredQuests.map((quest) => (
+
+          {statusFilteredQuests.map((quest) => (
             <QuestCard
               key={quest.id}
               quest={quest}
@@ -167,4 +165,5 @@ const QuestList = () => {
     </>
   );
 };
+
 export default QuestList;

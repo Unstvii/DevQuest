@@ -10,7 +10,6 @@ import { Quest } from "@/store/quests/quests.store";
 const useQuests = () => {
   const { quests, setQuests } = useQuestStore();
   const [search, setSearch] = useState("");
-  const [completed, setCompleted] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     const fetchQuests = async () => {
@@ -79,7 +78,6 @@ const useQuests = () => {
     filteredQuests,
     search,
     setSearch,
-    completed,
     updateQuestStatus,
     addQuest,
     doneQuestCounter,
