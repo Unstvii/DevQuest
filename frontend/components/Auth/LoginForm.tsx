@@ -62,7 +62,6 @@ export default function LoginForm() {
         </p>
       </div>
 
-      {/* Form */}
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3">
         <div className="flex flex-col gap-1">
           <label className="text-xs font-medium text-[var(--color-text-body)] pl-0.5">
