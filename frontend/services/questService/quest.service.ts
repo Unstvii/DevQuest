@@ -13,4 +13,7 @@ export const questService = {
   updateQuestStatus: (id: string, status: QuestStatus) => {
     return api.patch(`quests/${id}/status`, { status });
   },
+  deleteQuest: (id: string) => {
+    return api.delete(`quests/${id}`);
+  },
 };

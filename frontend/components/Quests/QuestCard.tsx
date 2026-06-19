@@ -4,10 +4,12 @@ import { Quest } from "@/store/quests/quests.store";
 
 interface QuestCardProps {
   quest: Quest;
-  onToggle: (id: string) => void;
+  onDone: (id: string) => void;
+  onDelete: (id: string) => void;
+  onArchive: (id: string) => void;
 }
 
-const QuestCard = ({ quest, onToggle }: QuestCardProps) => {
+const QuestCard = ({ quest, onDone, onDelete, onArchive }: QuestCardProps) => {
   const [expanded, setExpanded] = useState(false);
 
   const completed = quest.status === "COMPLETED";
@@ -55,7 +57,7 @@ const QuestCard = ({ quest, onToggle }: QuestCardProps) => {
           <button
             onClick={(e) => {
               e.stopPropagation();
-              onToggle(quest.id);
+              onDone(quest.id);
             }}
             className="shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all duration-200 cursor-pointer"
             title={completed ? "Відмітити невиконаним" : "Завершити квест"}
@@ -138,6 +140,78 @@ const QuestCard = ({ quest, onToggle }: QuestCardProps) => {
             {completed ? "✓" : "+"}
             {quest.xpReward} XP
           </span>
+
+          {!archived && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onArchive(quest.id);
+              }}
+              title="Архівувати квест"
+              className="shrink-0 w-7 h-7 rounded-lg flex items-center justify-center transition-all duration-200 cursor-pointer"
+              style={{
+                background: "var(--color-surface-overlay)",
+                color: "var(--color-text-muted)",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "rgba(245,158,11,0.14)";
+                e.currentTarget.style.color = "var(--color-warning)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background =
+                  "var(--color-surface-overlay)";
+                e.currentTarget.style.color = "var(--color-text-muted)";
+              }}
+            >
+              <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+                <path
+                  d="M2 4h12M3 4v9a1 1 0 001 1h8a1 1 0 001-1V4M6 4V2.5A.5.5 0 016.5 2h3a.5.5 0 01.5.5V4"
+                  stroke="currentColor"
+                  strokeWidth="1.4"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M6.5 7.5v3M9.5 7.5v3"
+                  stroke="currentColor"
+                  strokeWidth="1.2"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </button>
+          )}
+
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete(quest.id);
+            }}
+            title="Видалити квест"
+            className="shrink-0 w-7 h-7 rounded-lg flex items-center justify-center transition-all duration-200 cursor-pointer"
+            style={{
+              background: "var(--color-surface-overlay)",
+              color: "var(--color-text-muted)",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "rgba(239,68,68,0.14)";
+              e.currentTarget.style.color = "var(--color-danger)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "var(--color-surface-overlay)";
+              e.currentTarget.style.color = "var(--color-text-muted)";
+            }}
+          >
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+              <path
+                d="M3 4.5h10M5.5 4.5V3a1 1 0 011-1h3a1 1 0 011 1v1.5M6.5 7.5v4M9.5 7.5v4M4 4.5l.7 8.4a1 1 0 001 .9h4.6a1 1 0 001-.9l.7-8.4"
+                stroke="currentColor"
+                strokeWidth="1.4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </button>
+
           <svg
             width="16"
             height="16"
@@ -211,7 +285,7 @@ const QuestCard = ({ quest, onToggle }: QuestCardProps) => {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  onToggle(quest.id);
+                  onDone(quest.id);
                 }}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-medium text-xs transition-all duration-200 cursor-pointer"
                 style={{

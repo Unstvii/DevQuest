@@ -76,14 +76,16 @@ export class QuestController {
   delete = async (req: Request, res: Response): Promise<void> => {
     try {
       const id = req.params.id;
-      const deleted = await this.questService.delete(id);
+      const userId = req.user!.id;
+
+      const deleted = await this.questService.delete(id, userId);
 
       if (!deleted) {
-        res.status(404).json({ message: "Quest not found" });
+        res.status(400).json({ message: "Quest not deleted" });
         return;
       }
 
-      res.status(204).send();
+      res.status(204).json({ message: "Quest successfully deleted!" });
     } catch (error) {
       res.status(500).json({ message: "Server error" });
     }

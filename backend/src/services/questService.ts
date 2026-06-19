@@ -52,10 +52,12 @@ export class QuestService {
     return prisma.quest.update({ where: { id }, data });
   }
 
-  async delete(id: string) {
-    const existing = await prisma.quest.findUnique({ where: { id } });
+  async delete(id: string, userId: string) {
+    const existing = await prisma.quest.findUnique({
+      where: { id, userId: userId },
+    });
     if (!existing) return null;
 
-    return await prisma.quest.delete({ where: { id } });
+    return await prisma.quest.delete({ where: { id, userId: userId } });
   }
 }

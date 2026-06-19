@@ -6,6 +6,7 @@ import {
 } from "@/store/quests/quests.store";
 import { questService } from "../../services/questService/quest.service";
 import { Quest } from "@/store/quests/quests.store";
+import { useStoreWithEqualityFn } from "zustand/traditional";
 
 const useQuests = () => {
   const { quests, setQuests } = useQuestStore();
@@ -47,6 +48,15 @@ const useQuests = () => {
     }
   };
 
+  const deleteQuest = async (id: string) => {
+    try {
+      await questService.deleteQuest(id);
+      setQuests((prevQuests) => prevQuests.filter((quest) => quest.id !== id));
+    } catch (error) {
+      console.error("[useQuests] failed to delete quests:", error);
+    }
+  };
+
   const doneQuestCounter = () => {
     return {
       len: quests.length,
@@ -81,6 +91,7 @@ const useQuests = () => {
     updateQuestStatus,
     addQuest,
     doneQuestCounter,
+    deleteQuest,
   };
 };
 

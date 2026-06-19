@@ -20,6 +20,7 @@ const QuestList = () => {
     updateQuestStatus,
     addQuest,
     doneQuestCounter,
+    deleteQuest,
   } = useQuests();
 
   const [showModal, setShowModal] = useState(false);
@@ -152,12 +153,21 @@ const QuestList = () => {
             <QuestCard
               key={quest.id}
               quest={quest}
-              onToggle={() =>
+              onDone={() =>
                 updateQuestStatus(
                   quest.id,
                   quest.status === "COMPLETED" ? "ACTIVE" : "COMPLETED",
                 )
               }
+              onArchive={() => {
+                updateQuestStatus(
+                  quest.id,
+                  quest.status === "ARCHIVED" ? "ACTIVE" : "ARCHIVED",
+                );
+              }}
+              onDelete={() => {
+                deleteQuest(quest.id);
+              }}
             />
           ))}
         </div>
