@@ -30,7 +30,7 @@ const QuestList = () => {
 
   const statusFilteredQuests =
     statusFilter === "ALL"
-      ? filteredQuests
+      ? filteredQuests.filter((q) => q.status !== "ARCHIVED")
       : filteredQuests.filter((q) => q.status === statusFilter);
 
   return (

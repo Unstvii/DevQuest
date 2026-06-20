@@ -59,7 +59,10 @@ const useQuests = () => {
 
   const doneQuestCounter = () => {
     return {
-      len: quests.length,
+      len: quests.reduce(
+        (acc, quest) => (quest.status === "ARCHIVED" ? acc : acc + 1),
+        0,
+      ),
       done: quests.reduce(
         (acc, quest) => (quest.status === "COMPLETED" ? acc + 1 : acc),
         0,
