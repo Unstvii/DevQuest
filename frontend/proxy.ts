@@ -6,11 +6,9 @@ function isTokenExpired(token: string): boolean {
   try {
     const payload = token.split(".")[1];
     if (!payload) return true;
-
     const decoded = JSON.parse(
       Buffer.from(payload, "base64url").toString("utf-8"),
     );
-
     if (!decoded.exp) return false;
     const bufferSeconds = 30;
     return decoded.exp < Math.floor(Date.now() / 1000) + bufferSeconds;
@@ -18,16 +16,53 @@ function isTokenExpired(token: string): boolean {
     return true;
   }
 }
+console.log("ENV CHECK:", process.env.API_URL);
+async function refreshAccessToken(refreshToken: string) {
+  try {
+    const res = await fetch(`${process.env.API_URL}/auth/refresh`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `refreshToken=${refreshToken}`,
+      },
+    });
+
+    if (!res.ok) return null;
+
+    const data = await res.json();
+    return data.accessToken as string;
+  } catch {
+    return null;
+  }
+}
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token = request.cookies.get("accessToken")?.value;
-
+  const refreshToken = request.cookies.get("refreshToken")?.value;
   const isPublic = PUBLIC_ROUTES.includes(pathname);
-  const hasValidToken = token && !isTokenExpired(token);
+
+  let hasValidToken = Boolean(token) && !isTokenExpired(token!);
+  let newAccessToken: string | null = null;
+
+  if (!hasValidToken && refreshToken) {
+    newAccessToken = await refreshAccessToken(refreshToken);
+    if (newAccessToken) {
+      hasValidToken = true;
+    }
+  }
 
   if (isPublic && hasValidToken) {
-    return NextResponse.redirect(new URL("/profile", request.url));
+    const response = NextResponse.redirect(new URL("/profile", request.url));
+    if (newAccessToken) {
+      response.cookies.set("accessToken", newAccessToken, {
+        httpOnly: true,
+        secure: false,
+        sameSite: "lax",
+        maxAge: 60 * 60,
+      });
+    }
+    return response;
   }
 
   if (isPublic) {
@@ -36,13 +71,21 @@ export async function proxy(request: NextRequest) {
 
   if (!hasValidToken) {
     const response = NextResponse.redirect(new URL("/login", request.url));
-    if (token) {
-      response.cookies.delete("accessToken");
-    }
+    response.cookies.delete("accessToken");
+    response.cookies.delete("refreshToken");
     return response;
   }
 
-  return NextResponse.next();
+  const response = NextResponse.next();
+  if (newAccessToken) {
+    response.cookies.set("accessToken", newAccessToken, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+      maxAge: 60 * 60,
+    });
+  }
+  return response;
 }
 
 export const config = {

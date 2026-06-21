@@ -39,7 +39,7 @@ class authController {
         httpOnly: true,
         secure: false,
         sameSite: "lax",
-        maxAge: 7 * 24 * 60 * 60 * 1000,
+        maxAge: 60 * 60 * 1000,
       });
 
       res.status(201).json({ message: "Success login!" });
@@ -67,13 +67,24 @@ class authController {
   refreshToken = async (req: Request, res: Response) => {
     try {
       const refreshToken = req.cookies.refreshToken;
+      if (!refreshToken) {
+        res.status(401).json({ message: "Refresh token is missing" });
+        return;
+      }
       const decoded = jwt.verify(refreshToken, this.refreshSecret) as {
         id: string;
       };
+
       const accessToken = jwt.sign({ id: decoded.id }, this.accessSecret, {
         expiresIn: "1h",
       });
-      res.status(200).json({ token: accessToken });
+      res.cookie("accessToken", accessToken, {
+        httpOnly: true,
+        secure: false,
+        sameSite: "lax",
+        maxAge: 60 * 60 * 1000,
+      });
+      res.status(200).json({ accessToken: accessToken });
     } catch (error) {
       res.status(403).json({ message: "Token is not valid" });
     }
