@@ -141,45 +141,42 @@ const QuestCard = ({ quest, onDone, onDelete, onArchive }: QuestCardProps) => {
             {quest.xpReward} XP
           </span>
 
-          {!archived && (
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onArchive(quest.id);
-              }}
-              title="Архівувати квест"
-              className="shrink-0 w-7 h-7 rounded-lg flex items-center justify-center transition-all duration-200 cursor-pointer"
-              style={{
-                background: "var(--color-surface-overlay)",
-                color: "var(--color-text-muted)",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = "rgba(245,158,11,0.14)";
-                e.currentTarget.style.color = "var(--color-warning)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background =
-                  "var(--color-surface-overlay)";
-                e.currentTarget.style.color = "var(--color-text-muted)";
-              }}
-            >
-              <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
-                <path
-                  d="M2 4h12M3 4v9a1 1 0 001 1h8a1 1 0 001-1V4M6 4V2.5A.5.5 0 016.5 2h3a.5.5 0 01.5.5V4"
-                  stroke="currentColor"
-                  strokeWidth="1.4"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M6.5 7.5v3M9.5 7.5v3"
-                  stroke="currentColor"
-                  strokeWidth="1.2"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </button>
-          )}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onArchive(quest.id);
+            }}
+            title="Архівувати квест"
+            className="shrink-0 w-7 h-7 rounded-lg flex items-center justify-center transition-all duration-200 cursor-pointer"
+            style={{
+              background: "var(--color-surface-overlay)",
+              color: "var(--color-text-muted)",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "rgba(245,158,11,0.14)";
+              e.currentTarget.style.color = "var(--color-warning)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "var(--color-surface-overlay)";
+              e.currentTarget.style.color = "var(--color-text-muted)";
+            }}
+          >
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+              <path
+                d="M2 4h12M3 4v9a1 1 0 001 1h8a1 1 0 001-1V4M6 4V2.5A.5.5 0 016.5 2h3a.5.5 0 01.5.5V4"
+                stroke="currentColor"
+                strokeWidth="1.4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M6.5 7.5v3M9.5 7.5v3"
+                stroke="currentColor"
+                strokeWidth="1.2"
+                strokeLinecap="round"
+              />
+            </svg>
+          </button>
 
           <button
             onClick={(e) => {
