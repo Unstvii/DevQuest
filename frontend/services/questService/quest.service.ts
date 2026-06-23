@@ -8,7 +8,8 @@ export const questService = {
     return api.post("quests", quest);
   },
   updateQuest: (quest: QuestUpdate) => {
-    return api.patch("quests", quest);
+    const { id, ...data } = quest;
+    return api.patch(`quests/${id}`, quest);
   },
   updateQuestStatus: (id: string, status: QuestStatus) => {
     return api.patch(`quests/${id}/status`, { status });

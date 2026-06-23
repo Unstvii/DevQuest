@@ -3,6 +3,11 @@ import { useState } from "react";
 import useQuests from "@/hooks/quests/useQuests";
 import QuestCard from "./QuestCard";
 import QuestModal from "./QuestModal";
+import type {
+  Quest,
+  NewQuestPayload,
+  QuestUpdate,
+} from "@/store/quests/quests.store";
 
 const TABS = [
   { key: "ALL", label: "Всі" },
@@ -18,12 +23,14 @@ const QuestList = () => {
     search,
     setSearch,
     updateQuestStatus,
+    updateQuest,
     addQuest,
     doneQuestCounter,
     deleteQuest,
   } = useQuests();
 
   const [showModal, setShowModal] = useState(false);
+  const [editingQuest, setEditingQuest] = useState<Quest | null>(null);
   const [statusFilter, setStatusFilter] = useState("ALL");
 
   const doneQuests = doneQuestCounter();
@@ -33,10 +40,42 @@ const QuestList = () => {
       ? filteredQuests.filter((q) => q.status !== "ARCHIVED")
       : filteredQuests.filter((q) => q.status === statusFilter);
 
+  const openCreateModal = () => {
+    setEditingQuest(null);
+    setShowModal(true);
+  };
+
+  const openEditModal = (quest: Quest) => {
+    setEditingQuest(quest);
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    setEditingQuest(null);
+  };
+
+  const handleSubmit = (data: NewQuestPayload) => {
+    if (editingQuest) {
+      const payload: QuestUpdate = {
+        id: editingQuest.id,
+        ...data,
+        status: editingQuest.status,
+      };
+      updateQuest(payload);
+    } else {
+      addQuest({ ...data, status: "ACTIVE" });
+    }
+  };
+
   return (
     <>
       {showModal && (
-        <QuestModal onClose={() => setShowModal(false)} onAdd={addQuest} />
+        <QuestModal
+          onClose={closeModal}
+          onSubmit={handleSubmit}
+          quest={editingQuest ?? undefined}
+        />
       )}
 
       <div
@@ -80,6 +119,7 @@ const QuestList = () => {
             />
           </div>
         </div>
+
         <div className="w-full max-w-2xl mb-5 flex gap-3">
           <div
             className="flex items-center gap-3 rounded-xl px-4 py-2.5 border transition-all duration-200 flex-1"
@@ -99,7 +139,7 @@ const QuestList = () => {
           </div>
 
           <button
-            onClick={() => setShowModal(true)}
+            onClick={openCreateModal}
             className="px-4 py-2.5 rounded-xl text-sm font-semibold cursor-pointer"
             style={{
               background: "var(--color-brand)",
@@ -109,6 +149,7 @@ const QuestList = () => {
             Новий квест
           </button>
         </div>
+
         <div className="w-full max-w-2xl mb-6 relative">
           <div className="flex gap-2 relative">
             {TABS.map((tab) => {
@@ -139,6 +180,7 @@ const QuestList = () => {
             })}
           </div>
         </div>
+
         <div className="w-full max-w-2xl flex flex-col gap-3">
           {statusFilteredQuests.length === 0 && (
             <p
@@ -168,6 +210,7 @@ const QuestList = () => {
               onDelete={() => {
                 deleteQuest(quest.id);
               }}
+              onEdit={() => openEditModal(quest)}
             />
           ))}
         </div>

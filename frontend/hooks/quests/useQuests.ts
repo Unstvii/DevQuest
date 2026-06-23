@@ -92,6 +92,7 @@ const useQuests = () => {
     search,
     setSearch,
     updateQuestStatus,
+    updateQuest,
     addQuest,
     doneQuestCounter,
     deleteQuest,

@@ -7,9 +7,16 @@ interface QuestCardProps {
   onDone: (id: string) => void;
   onDelete: (id: string) => void;
   onArchive: (id: string) => void;
+  onEdit: (quest: Quest) => void;
 }
 
-const QuestCard = ({ quest, onDone, onDelete, onArchive }: QuestCardProps) => {
+const QuestCard = ({
+  quest,
+  onDone,
+  onDelete,
+  onArchive,
+  onEdit,
+}: QuestCardProps) => {
   const [expanded, setExpanded] = useState(false);
 
   const completed = quest.status === "COMPLETED";
@@ -177,7 +184,36 @@ const QuestCard = ({ quest, onDone, onDelete, onArchive }: QuestCardProps) => {
               />
             </svg>
           </button>
-
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onEdit(quest);
+            }}
+            title="Редагувати квест"
+            className="shrink-0 w-7 h-7 rounded-lg flex items-center justify-center transition-all duration-200 cursor-pointer"
+            style={{
+              background: "var(--color-surface-overlay)",
+              color: "var(--color-text-muted)",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "rgba(99,102,241,0.14)";
+              e.currentTarget.style.color = "var(--color-brand)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "var(--color-surface-overlay)";
+              e.currentTarget.style.color = "var(--color-text-muted)";
+            }}
+          >
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+              <path
+                d="M11.5 2.5l2 2L5 13l-3 1 1-3 8.5-8.5z"
+                stroke="currentColor"
+                strokeWidth="1.4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </button>
           <button
             onClick={(e) => {
               e.stopPropagation();

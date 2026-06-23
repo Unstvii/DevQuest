@@ -1,14 +1,15 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type {
   Quest,
   QuestType,
   NewQuestPayload,
 } from "../../store/quests/quests.store";
 
-interface AddQuestModalProps {
+interface QuestModalProps {
   onClose: () => void;
-  onAdd: (quest: Omit<Quest, "id">) => void;
+  onSubmit: (data: NewQuestPayload) => void;
+  quest?: Quest; // якщо передано — модал працює в режимі редагування
 }
 
 const INITIAL_FORM: NewQuestPayload = {
@@ -18,8 +19,24 @@ const INITIAL_FORM: NewQuestPayload = {
   type: "NORMAL",
 };
 
-const QuestModal = ({ onClose, onAdd }: AddQuestModalProps) => {
-  const [form, setForm] = useState<NewQuestPayload>(INITIAL_FORM);
+const toFormState = (quest?: Quest): NewQuestPayload =>
+  quest
+    ? {
+        title: quest.title,
+        description: quest.description ?? "",
+        xpReward: quest.xpReward,
+        type: quest.type,
+      }
+    : INITIAL_FORM;
+
+const QuestModal = ({ onClose, onSubmit, quest }: QuestModalProps) => {
+  const isEditMode = Boolean(quest);
+  const [form, setForm] = useState<NewQuestPayload>(toFormState(quest));
+
+  // якщо модал переоткрили з іншим квестом (наприклад, не розмонтовуючи) — синхронізуємо форму
+  useEffect(() => {
+    setForm(toFormState(quest));
+  }, [quest]);
 
   const handleChange = <K extends keyof NewQuestPayload>(
     key: K,
@@ -30,11 +47,10 @@ const QuestModal = ({ onClose, onAdd }: AddQuestModalProps) => {
 
   const handleSubmit = () => {
     if (!form.title.trim()) return;
-    onAdd({
+    onSubmit({
       ...form,
       title: form.title.trim(),
       description: form.description ? form.description.trim() : null,
-      status: "ACTIVE",
     });
     onClose();
   };
@@ -58,7 +74,7 @@ const QuestModal = ({ onClose, onAdd }: AddQuestModalProps) => {
             className="text-lg font-bold"
             style={{ color: "var(--color-text-primary)" }}
           >
-            Новий квест
+            {isEditMode ? "Редагувати квест" : "Новий квест"}
           </h2>
           <button
             onClick={onClose}
@@ -75,6 +91,7 @@ const QuestModal = ({ onClose, onAdd }: AddQuestModalProps) => {
             </svg>
           </button>
         </div>
+
         <div className="space-y-1.5">
           <label
             className="text-xs font-medium"
@@ -99,6 +116,7 @@ const QuestModal = ({ onClose, onAdd }: AddQuestModalProps) => {
             onBlur={(e) => (e.target.style.borderColor = "var(--color-border)")}
           />
         </div>
+
         <div className="space-y-1.5">
           <label
             className="text-xs font-medium"
@@ -123,6 +141,7 @@ const QuestModal = ({ onClose, onAdd }: AddQuestModalProps) => {
             onBlur={(e) => (e.target.style.borderColor = "var(--color-border)")}
           />
         </div>
+
         <div className="flex gap-3">
           <div className="flex-1 space-y-1.5">
             <label
@@ -191,6 +210,7 @@ const QuestModal = ({ onClose, onAdd }: AddQuestModalProps) => {
             </div>
           </div>
         </div>
+
         <button
           onClick={handleSubmit}
           disabled={!form.title.trim()}
@@ -202,7 +222,7 @@ const QuestModal = ({ onClose, onAdd }: AddQuestModalProps) => {
             color: form.title.trim() ? "white" : "var(--color-text-disabled)",
           }}
         >
-          Створити квест
+          {isEditMode ? "Зберегти зміни" : "Створити квест"}
         </button>
       </div>
     </div>
