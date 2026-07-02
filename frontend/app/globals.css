@@ -18,6 +18,7 @@
   --color-text-body: #2d3060;
   --color-text-muted: #5a5f90;
   --color-text-disabled: #9498c0;
+  --color-text-accent: #a855f7;
 
   /* Brand */
   --color-brand: #6366f1;
@@ -64,6 +65,7 @@
     --color-text-body: #c4c6e0;
     --color-text-muted: #7880b0;
     --color-text-disabled: #464870;
+    --color-text-accent: #a855f7;
 
     /* Brand */
     --color-brand: #6366f1;
