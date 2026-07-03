@@ -23,14 +23,27 @@ const Home = () => {
               персонажа.
             </span>
           </h1>
-          <p className="mb-8" style={{ color: "white" }}>
+          <p
+            className="mb-8 text-[17px] font-normal tracking-wide w-130"
+            style={{ color: "var(--colot-text-secondary)" }}
+          >
             DevQuest - це не готовий список завдань. Ти сам формулюєш квест, сам
             призначаєш йому ціну в XP і сам вирішуєш, яка ачівка чекає в кінці.
             Платформа лише рахує очки й показує рейтинг
           </p>
-          <div className="mb-[38]">
-            <button className="">Створити свій квест</button>
-            <button className="">Подивитись рейтинг</button>
+          <div
+            className="flex w-200 mb-[38] gap-4 font-semibold text-sm font-[Inter] tracking-wider"
+            style={{ color: "var(--color-text-primary)" }}
+          >
+            <button className="px-8 py-4 rounded-xl bg-gradient-to-r from-violet-500 via-fuchsia-500 to-pink-500">
+              Створити свій квест &rarr;
+            </button>
+            <button
+              className="px-8 py-4 rounded-xl rounded-xl border border-solid"
+              style={{ border: "1px solid #242a4a" }}
+            >
+              Подивитись рейтинг
+            </button>
           </div>
         </div>
         <div className="" style={{ background: "white" }}>
