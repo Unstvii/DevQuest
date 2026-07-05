@@ -1,9 +1,10 @@
+import Intro from "../components/Intro/Intro";
 import Link from "next/link";
 
 const Home = () => {
   return (
     <div
-      className="h-screen w-100% pt-16 pb-4"
+      className="min-h-screen w-full pt-16 pb-4"
       style={{
         background: "var(--color-bg-base)",
       }}
@@ -126,6 +127,7 @@ const Home = () => {
           </div>
         </div>
       </section>
+      <Intro />
     </div>
   );
 };
