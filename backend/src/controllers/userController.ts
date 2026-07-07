@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 
 const access_secret = process.env.ACCESS_SECRET!;
 
-class userConteroller {
+class userController {
   constructor(private userService: userService) {}
 
   decodeToken = (token: string) => {
@@ -40,4 +40,4 @@ class userConteroller {
   };
 }
 
-export default userConteroller;
+export default userController;

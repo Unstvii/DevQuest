@@ -42,14 +42,40 @@ export class QuestService {
     userId: string,
     data: Pick<UpdateQuestDto, "status">,
   ) {
-    const existing = await prisma.quest.findFirst({
+    const existingQuest = await prisma.quest.findFirst({
       where: {
         id: id,
         userId: userId,
       },
     });
-    if (!existing) return null;
-    return prisma.quest.update({ where: { id }, data });
+    if (!existingQuest) return null;
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+    console.log(existingQuest.completedAt, user?.xp, existingQuest.xpReward);
+
+    if (data.status === "COMPLETED") {
+      if (!existingQuest.completedAt) {
+        await prisma.user.update({
+          where: { id: userId },
+          data: {
+            xp: {
+              increment: 1,
+            },
+          },
+        });
+        const date = new Date();
+
+        return await prisma.quest.update({
+          where: { id },
+          data: { status: data.status, completedAt: date },
+        });
+      }
+    }
+
+    return await prisma.quest.update({ where: { id }, data });
   }
 
   async delete(id: string, userId: string) {

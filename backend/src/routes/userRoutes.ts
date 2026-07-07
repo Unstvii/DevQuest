@@ -1,11 +1,11 @@
 import { Router } from "express";
-import userConteroller from "../controllers/userController";
+import userController from "../controllers/userController";
 import userService from "../services/userService";
 
 const userRoutes = Router();
 
 const services = new userService();
-const controller = new userConteroller(services);
+const controller = new userController(services);
 
 userRoutes.get("/", controller.getMe);
 
