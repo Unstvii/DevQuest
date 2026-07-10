@@ -54,20 +54,45 @@ export class QuestService {
         id: userId,
       },
     });
-    console.log(existingQuest.completedAt, user?.xp, existingQuest.xpReward);
 
     if (data.status === "COMPLETED") {
       if (!existingQuest.completedAt) {
-        await prisma.user.update({
-          where: { id: userId },
-          data: {
-            xp: {
-              increment: 1,
-            },
-          },
-        });
-        const date = new Date();
+        if (!user?.xp) {
+          return;
+        }
+        const lvlProgress = (user.level + 1.6) * 100;
+        const IsUserLvlUp = this.checklvlUp(
+          user?.xp,
+          existingQuest.xpReward,
+          lvlProgress,
+        );
 
+        const xpRewardWithLevelUp =
+          user.xp + existingQuest.xpReward - lvlProgress;
+        console.log(xpRewardWithLevelUp);
+        if (IsUserLvlUp) {
+          await prisma.user.update({
+            where: { id: userId },
+            data: {
+              level: {
+                increment: 1,
+              },
+              xp: xpRewardWithLevelUp,
+            },
+          });
+        } else {
+          await prisma.user.update({
+            where: { id: userId },
+            data: {
+              xp: {
+                increment: existingQuest.xpReward,
+              },
+            },
+          });
+        }
+
+        const date = new Date();
+        console.log(existingQuest.xpReward, user?.xp, user?.level);
         return await prisma.quest.update({
           where: { id },
           data: { status: data.status, completedAt: date },
@@ -76,6 +101,12 @@ export class QuestService {
     }
 
     return await prisma.quest.update({ where: { id }, data });
+  }
+  checklvlUp(userXP: number, questReward: number, lvlProgress: number) {
+    if (lvlProgress <= userXP + questReward) {
+      return true;
+    }
+    return false;
   }
 
   async delete(id: string, userId: string) {
