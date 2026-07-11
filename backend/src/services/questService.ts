@@ -57,7 +57,7 @@ export class QuestService {
 
     if (data.status === "COMPLETED") {
       if (!existingQuest.completedAt) {
-        if (!user?.xp) {
+        if (!user) {
           return;
         }
         const lvlProgress = (user.level + 1.6) * 100;
