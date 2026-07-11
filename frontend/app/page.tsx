@@ -1,3 +1,4 @@
+import HowItIsWorks from "@/components/HowItIsWorks/HowItIsWorks";
 import Intro from "../components/Intro/Intro";
 import Link from "next/link";
 
@@ -116,7 +117,7 @@ const Home = () => {
                 </div>
 
                 <div className="rounded-lg border border-slate-700 bg-slate-900 px-4 py-2 text-sm">
-                  ⚡ 14-денний стрик
+                  ⚡ 14-денний стрік
                 </div>
 
                 <div className="rounded-lg border border-pink-500 border-dashed bg-pink-500/10 px-4 py-2 text-sm text-pink-200">
@@ -127,6 +128,7 @@ const Home = () => {
           </div>
         </div>
       </section>
+      <HowItIsWorks />
       <Intro />
     </div>
   );
