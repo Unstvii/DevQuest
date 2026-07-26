@@ -5,8 +5,15 @@ import { userService } from "@/services/userService/user.service";
 import { useUserStore } from "@/store/user/userProfile.store";
 
 const UserProfile = () => {
-  const { setUserProfile, clearUserProfile, email, username, xp, level } =
-    useUserStore();
+  const {
+    setUserProfile,
+    clearUserProfile,
+    email,
+    username,
+    xp,
+    level,
+    streak,
+  } = useUserStore();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -107,6 +114,11 @@ const UserProfile = () => {
             </span>
             <span className="text-lg font-bold text-[var(--color-streak)]">
               {xp}
+            </span>
+          </div>
+          <div className="text-center">
+            <span className="text-lg font-bold text-[var(--color-streak)]">
+              Streak: {streak}
             </span>
           </div>
         </div>

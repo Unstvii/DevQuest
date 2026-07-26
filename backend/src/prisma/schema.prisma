@@ -44,6 +44,10 @@ model User {
   passwordHash String
   xp           Int      @default(0)
   level        Int      @default(1)
+
+  streak          Int       @default(0)
+  lastStreakDate  DateTime?
+  
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 

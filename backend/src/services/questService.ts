@@ -1,5 +1,6 @@
 import prisma from "../prisma/prismaClient";
 import { Quest, UpdateQuestDto } from "../models/quest";
+import { differenceInCalendarDays } from "date-fns";
 
 export class QuestService {
   async getAll(id: string) {
@@ -69,7 +70,6 @@ export class QuestService {
 
         const xpRewardWithLevelUp =
           user.xp + existingQuest.xpReward - lvlProgress;
-        console.log(xpRewardWithLevelUp);
         if (IsUserLvlUp) {
           await prisma.user.update({
             where: { id: userId },
@@ -92,7 +92,6 @@ export class QuestService {
         }
 
         const date = new Date();
-        console.log(existingQuest.xpReward, user?.xp, user?.level);
         return await prisma.quest.update({
           where: { id },
           data: { status: data.status, completedAt: date },
@@ -107,6 +106,47 @@ export class QuestService {
       return true;
     }
     return false;
+  }
+  async updateStreak(id: string, userId: string, data: UpdateQuestDto) {
+    if (data.status != "COMPLETED") {
+      return;
+    }
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+    if (!user) {
+      return;
+    }
+    if (!user.lastStreakDate) {
+      await prisma.user.update({
+        where: { id: userId },
+        data: { streak: 1, lastStreakDate: new Date() },
+      });
+      return;
+    }
+    const diffDays = differenceInCalendarDays(new Date(), user.lastStreakDate);
+
+    if (diffDays === 0) {
+      return;
+    }
+
+    if (diffDays === 1) {
+      await prisma.user.update({
+        where: { id: userId },
+        data: { streak: { increment: 1 }, lastStreakDate: new Date() },
+      });
+      return;
+    }
+
+    if (diffDays > 1) {
+      await prisma.user.update({
+        where: { id: userId },
+        data: { streak: 1, lastStreakDate: new Date() },
+      });
+      return;
+    }
   }
 
   async delete(id: string, userId: string) {

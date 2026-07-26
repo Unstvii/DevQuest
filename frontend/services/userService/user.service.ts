@@ -5,6 +5,7 @@ interface UserProfileResponse {
   username: string;
   xp: number;
   level: number;
+  streak: number;
 }
 
 export const userService = {
