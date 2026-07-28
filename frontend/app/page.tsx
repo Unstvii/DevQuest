@@ -1,7 +1,8 @@
 import HowItIsWorks from "@/components/HowItIsWorks/HowItIsWorks";
 import Intro from "../components/Intro/Intro";
 import Link from "next/link";
-
+import Image from "next/image";
+import hero from "../public/hero_avatar.svg";
 const Home = () => {
   return (
     <div
@@ -86,7 +87,15 @@ const Home = () => {
 
             <div className="relative z-10">
               <div className="mb-8 flex items-center gap-5">
-                <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[conic-gradient(#8b5cf6_72%,#232850_0)] p-[7px]"></div>
+                <div className="flex h-18 w-18 items-center justify-center rounded-full bg-[conic-gradient(#8b5cf6_72%,#232850_0)] p-[7px]">
+                  <Image
+                    src={hero}
+                    alt="Персонаж з лупою шукає квест"
+                    width={220}
+                    height={220}
+                    className="h-full w-auto object-contain bg-white rounded-full p-1"
+                  />
+                </div>
 
                 <div>
                   <h3 className="font-semibold text-lg">Олекса Мельник</h3>
