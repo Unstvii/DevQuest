@@ -1,4 +1,7 @@
 import Image from "next/image";
+import amigos from "../../public/Amigos Lightbulb.svg";
+import yuppi from "../../public/Yuppies Bust.svg";
+import shiny from "../../public/Shiny Happy Stats and Graphs.svg";
 
 const Intro = () => {
   return (
@@ -22,7 +25,7 @@ const Intro = () => {
         <div className="overflow-hidden rounded-2xl border border-[#242a4a] bg-[#12152a] transition-transform duration-300 hover:-translate-y-1.5">
           <div className="flex h-[220px] items-end justify-center overflow-hidden bg-[#ece1f9] pt-2.5">
             <Image
-              src="/images/quest-icon.png"
+              src={yuppi}
               alt="Персонаж з лупою шукає квест"
               width={220}
               height={220}
@@ -42,7 +45,7 @@ const Intro = () => {
         <div className="overflow-hidden rounded-2xl border border-[#242a4a] bg-[#12152a] transition-transform duration-300 hover:-translate-y-1.5">
           <div className="flex h-[220px] items-end justify-center overflow-hidden bg-[#fbe3ee] pt-2.5">
             <Image
-              src="/images/idea-icon.png"
+              src={amigos}
               alt="Лампочка як символ власної ідеї"
               width={220}
               height={220}
@@ -62,7 +65,7 @@ const Intro = () => {
         <div className="overflow-hidden rounded-2xl border border-[#242a4a] bg-[#12152a] transition-transform duration-300 hover:-translate-y-1.5">
           <div className="flex h-[220px] items-end justify-center overflow-hidden bg-[#e1e4fb] pt-2.5">
             <Image
-              src="/images/progress-icon.png"
+              src={shiny}
               alt="Розробник стежить за зростанням прогресу"
               width={220}
               height={220}
