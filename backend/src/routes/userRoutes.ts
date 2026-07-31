@@ -8,5 +8,6 @@ const services = new userService();
 const controller = new userController(services);
 
 userRoutes.get("/", controller.getMe);
+userRoutes.get("/usersRating", controller.getUsersRating);
 
 export default userRoutes;
