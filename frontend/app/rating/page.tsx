@@ -1,45 +1,23 @@
-import { Crown, Flame, Trophy, Medal } from "lucide-react";
-import React from "react";
-type User = {
-  id: number;
-  nickname: string;
-  level: number;
-  streak: number;
-};
+"use client";
 
-const users: User[] = [
-  {
-    id: 1,
-    nickname: "ReactMaster",
-    level: 52,
-    streak: 284,
-  },
-  {
-    id: 2,
-    nickname: "NextWizard",
-    level: 49,
-    streak: 170,
-  },
-  {
-    id: 3,
-    nickname: "TypeScript",
-    level: 45,
-    streak: 161,
-  },
-  {
-    id: 4,
-    nickname: "Kolia",
-    level: 32,
-    streak: 91,
-  },
-  {
-    id: 5,
-    nickname: "BackendDev",
-    level: 28,
-    streak: 74,
-  },
-];
+import { Crown, Flame, Trophy, Medal } from "lucide-react";
+import { userService } from "../../services/userService/user.service";
+import { UserRating } from "../../services/userService/user.service";
+import React, { useEffect, useState } from "react";
+
 const page = () => {
+  const [users, setUsers] = useState<UserRating[]>([]);
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const users = await userService.getRating();
+        setUsers(users);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchUsers();
+  }, []);
   return (
     <div className="bg-[var(--color-bg-base)] pt-30">
       <div className="space-y-5 w-[63.5%] my-0 mx-auto h-[90vh]">
@@ -60,7 +38,7 @@ const page = () => {
 
             return (
               <div
-                key={user.id}
+                key={index}
                 className={`group
                     rounded-2xl
                     border
@@ -99,13 +77,13 @@ const page = () => {
                 </div>
 
                 <img
-                  src={`https://api.dicebear.com/9.x/thumbs/svg?seed=${user.nickname}`}
+                  src={`https://api.dicebear.com/9.x/thumbs/svg?seed=${user.username}`}
                   className="w-14 h-14 rounded-full border border-[var(--color-border)]"
                 />
 
                 <div className="flex-1">
                   <div className="font-semibold text-lg text-[var(--color-text-primary)]">
-                    {user.nickname}
+                    {user.username}
                   </div>
 
                   <div className="text-sm text-[var(--color-text-muted)]">

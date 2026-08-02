@@ -41,7 +41,7 @@ class userController {
     try {
       const users = await this.userService.getUsersRating();
 
-      return res.status(200).json({ users: users });
+      return res.status(200).json(users);
     } catch (error) {
       res.status(500).json({ message: "Error get users rating" });
     }
