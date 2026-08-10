@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const PUBLIC_ROUTES = ["/login", "/register"];
+const PUBLIC_ROUTES = ["/login", "/register", "/"];
 
 function isTokenExpired(token: string): boolean {
   try {
@@ -16,7 +16,7 @@ function isTokenExpired(token: string): boolean {
     return true;
   }
 }
-console.log("ENV CHECK:", process.env.API_URL);
+
 async function refreshAccessToken(refreshToken: string) {
   try {
     const res = await fetch(`${process.env.API_URL}/auth/refresh`, {
