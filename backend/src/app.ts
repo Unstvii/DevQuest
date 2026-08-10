@@ -15,6 +15,9 @@ app.use(
 );
 app.use(express.json());
 app.use(cookieParser());
+app.get("/", (req, res) => {
+  res.json({ message: "Welcome!" });
+});
 app.use("/auth", authRoutes);
 app.use(authMiddleware);
 app.use("/user", userRoutes);

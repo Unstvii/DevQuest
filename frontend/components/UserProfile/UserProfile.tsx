@@ -90,10 +90,10 @@ const UserProfile = () => {
         <div className="w-full grid grid-cols-2 gap-2">
           <div
             className="
-        flex flex-col items-center gap-0.5 py-3 rounded-xl
-        bg-[var(--color-surface-raised)]
-        border border-[var(--color-border)]
-      "
+      flex flex-col items-center gap-0.5 py-3 rounded-xl
+      bg-[var(--color-surface-raised)]
+      border border-[var(--color-border)]
+    "
           >
             <span className="text-[11px] text-[var(--color-text-muted)]">
               Рівень
@@ -102,12 +102,13 @@ const UserProfile = () => {
               {level}
             </span>
           </div>
+
           <div
             className="
-        flex flex-col items-center gap-0.5 py-3 rounded-xl
-        bg-[var(--color-surface-raised)]
-        border border-[var(--color-border)]
-      "
+      flex flex-col items-center gap-0.5 py-3 rounded-xl
+      bg-[var(--color-surface-raised)]
+      border border-[var(--color-border)]
+    "
           >
             <span className="text-[11px] text-[var(--color-text-muted)]">
               XP
@@ -116,9 +117,22 @@ const UserProfile = () => {
               {xp}
             </span>
           </div>
-          <div className="text-center">
-            <span className="text-lg font-bold text-[var(--color-streak)]">
-              Streak: {streak}
+
+          {/* Streak */}
+          <div
+            className="
+      col-span-2
+      flex items-center justify-center gap-3
+      py-3 rounded-xl
+      bg-orange-500/10
+      border border-orange-500/20
+    "
+          >
+            <span className="text-xl font-bold text-[var(--color-streak)]">
+              🔥 {streak}
+            </span>
+            <span className="text-xs text-[var(--color-text-muted)]">
+              днів поспіль
             </span>
           </div>
         </div>
