@@ -66,7 +66,18 @@ export async function proxy(request: NextRequest) {
   }
 
   if (isPublic) {
-    return NextResponse.next();
+    const response = NextResponse.next();
+
+    if (newAccessToken) {
+      response.cookies.set("accessToken", newAccessToken, {
+        httpOnly: true,
+        secure: false,
+        sameSite: "lax",
+        maxAge: 60 * 60,
+      });
+    }
+
+    return response;
   }
 
   if (!hasValidToken) {
