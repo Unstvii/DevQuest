@@ -52,7 +52,7 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  if (isPublic && hasValidToken) {
+  if (isPublic && hasValidToken && pathname !== "/") {
     const response = NextResponse.redirect(new URL("/profile", request.url));
     if (newAccessToken) {
       response.cookies.set("accessToken", newAccessToken, {
