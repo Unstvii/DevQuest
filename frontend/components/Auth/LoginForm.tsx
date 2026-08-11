@@ -21,7 +21,7 @@ export default function LoginForm() {
       const response = await authService.login(userLoginData);
       toast.success("Ласкаво просимо!");
 
-      router.push("/profile");
+      router.push("/quests");
     } catch (error) {
       toast.error("Невірний email або пароль");
     }
