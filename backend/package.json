@@ -18,6 +18,9 @@
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.3"
   },
+  "prisma": {
+    "seed": "ts-node seed.ts"
+  },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
     "@types/cookie-parser": "^1.4.10",

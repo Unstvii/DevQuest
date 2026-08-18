@@ -8,7 +8,7 @@ class authController {
 
   constructor(private authService: authService) {}
 
-  register = async (req: Request, res: Response): Promise<void> => {
+  register = async (req: Request, res: Response) => {
     try {
       const user = await this.authService.register(req.body);
       res.status(201).json({ message: "User created", user });
@@ -23,7 +23,7 @@ class authController {
       }
     }
   };
-  login = async (req: Request, res: Response): Promise<void> => {
+  login = async (req: Request, res: Response) => {
     try {
       const { accessToken, refreshToken } = await this.authService.login(
         req.body,

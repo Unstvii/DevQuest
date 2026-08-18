@@ -2,22 +2,18 @@ import { Request, Response } from "express";
 import { QuestService } from "../services/questService";
 
 export class QuestController {
-  private questService: QuestService;
+  constructor(private questService: QuestService) {}
 
-  constructor(questService: QuestService) {
-    this.questService = questService;
-  }
-
-  getAll = async (req: Request, res: Response): Promise<void> => {
+  getAll = async (req: Request, res: Response) => {
     try {
       const quests = await this.questService.getAll(req.user!.id);
-      res.json(quests);
+      return res.status(200).json(quests);
     } catch (error) {
       res.status(500).json({ message: "Server error" });
     }
   };
 
-  getById = async (req: Request, res: Response): Promise<void> => {
+  getById = async (req: Request, res: Response) => {
     try {
       const id = req.params.id;
       const quest = await this.questService.getById(id);
@@ -33,7 +29,7 @@ export class QuestController {
     }
   };
 
-  create = async (req: Request, res: Response): Promise<void> => {
+  create = async (req: Request, res: Response) => {
     try {
       const quest = await this.questService.create(req.user!.id, req.body);
       res.status(201).json(quest);
@@ -42,7 +38,7 @@ export class QuestController {
       res.status(500).json({ message: "Server error", error: String(error) });
     }
   };
-  update = async (req: Request, res: Response): Promise<void> => {
+  update = async (req: Request, res: Response) => {
     try {
       const id = req.params.id;
       const userId = req.user!.id;
@@ -74,7 +70,7 @@ export class QuestController {
     }
   };
 
-  delete = async (req: Request, res: Response): Promise<void> => {
+  delete = async (req: Request, res: Response) => {
     try {
       const id = req.params.id;
       const userId = req.user!.id;

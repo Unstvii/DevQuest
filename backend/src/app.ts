@@ -5,6 +5,7 @@ import authRoutes from "./routes/authRoutes";
 import userRoutes from "./routes/userRoutes";
 import cookieParser from "cookie-parser";
 import authMiddleware from "./middleware/auth.middleware";
+import achivmentRoutes from "./routes/achivmentRoutes";
 
 const app = express();
 app.use(
@@ -20,5 +21,6 @@ app.use("/auth", authRoutes);
 app.use(authMiddleware);
 app.use("/user", userRoutes);
 app.use("/quests", questRoutes);
+app.use("/achivment", achivmentRoutes);
 
 export default app;
