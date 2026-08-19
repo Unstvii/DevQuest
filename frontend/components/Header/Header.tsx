@@ -15,7 +15,12 @@ const Header = () => {
 
   const navigationItems = [
     { href: "/quests", label: "Квести", icon: "🎮", iconColor: "#8b5cf6" },
-    { href: "/challenges", label: "Виклики", icon: "⚡", iconColor: "#f59e0b" },
+    {
+      href: "/achivment",
+      label: "Досягнення",
+      icon: "⚡",
+      iconColor: "#f59e0b",
+    },
     { href: "/rating", label: "Рейтинг", icon: "🏆", iconColor: "#f97316" },
     { href: "/profile", label: "Профіль", icon: "👤", iconColor: "#818cf8" },
   ];
