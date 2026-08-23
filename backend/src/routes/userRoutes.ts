@@ -7,7 +7,7 @@ const userRoutes = Router();
 const services = new userService();
 const controller = new userController(services);
 
-// userRoutes.get("/", controller.getMe);
+userRoutes.get("/", controller.getUserInfo);
 userRoutes.get("/usersRating", controller.getUsersRating);
 
 export default userRoutes;

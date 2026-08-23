@@ -65,6 +65,8 @@ export class QuestController {
         req.body,
       );
 
+      await this.questService.updateStreak(id, userId, req.body);
+
       return res.status(200).json({
         quest: updatedQuest,
       });

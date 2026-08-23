@@ -18,7 +18,6 @@ class achivmentService {
       where: { id: userId },
     });
     return getUserData;
-    // if(getUserData.someParams?)
   };
 }
 

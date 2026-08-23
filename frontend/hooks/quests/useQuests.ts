@@ -31,16 +31,7 @@ const useQuests = () => {
   // UPDATE QUEST STATUS
   const updateQuestStatus = async (id: string, status: QuestStatus) => {
     try {
-      console.log("➡️ UPDATE STATUS REQUEST:", {
-        id,
-        status,
-      });
-
       const response = await questService.updateQuestStatus(id, status);
-
-      console.log("⬅️ UPDATE STATUS RESPONSE:", response);
-      console.log("⬅️ RESPONSE DATA:", response.data);
-      console.log("⬅️ RESPONSE QUEST:", response.data?.quest);
 
       if (!response.data?.quest) {
         console.error("❌ Backend did not return quest:", response.data);

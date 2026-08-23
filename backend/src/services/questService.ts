@@ -132,7 +132,7 @@ export class QuestService {
     }
     const user = await prisma.userStats.findUnique({
       where: {
-        id: userId,
+        userId,
       },
     });
     if (!user) {
@@ -140,7 +140,7 @@ export class QuestService {
     }
     if (!user.lastStreakDate) {
       await prisma.userStats.update({
-        where: { id: userId },
+        where: { userId },
         data: { streak: 1, lastStreakDate: new Date() },
       });
       return;
@@ -153,7 +153,7 @@ export class QuestService {
 
     if (diffDays === 1) {
       await prisma.userStats.update({
-        where: { id: userId },
+        where: { userId },
         data: { streak: { increment: 1 }, lastStreakDate: new Date() },
       });
       return;
@@ -161,7 +161,7 @@ export class QuestService {
 
     if (diffDays > 1) {
       await prisma.userStats.update({
-        where: { id: userId },
+        where: { userId },
         data: { streak: 1, lastStreakDate: new Date() },
       });
       return;

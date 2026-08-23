@@ -29,13 +29,19 @@ class userController {
     }
 
     const user = await this.userService.getUserInfo(decoded.id);
-
     if (!user) {
       return res.status(404).json({ message: "User not found!" });
     }
 
-    const { passwordHash, ...userWithoutPassword } = user;
-    res.status(200).json(userWithoutPassword);
+    const userInfo = {
+      username: user.username,
+      email: user.email,
+      xp: user.stats?.xp,
+      level: user.stats?.level,
+      streak: user.stats?.streak,
+    };
+
+    res.status(200).json(userInfo);
   };
   getUsersRating = async (req: Request, res: Response) => {
     try {
