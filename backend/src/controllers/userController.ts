@@ -32,12 +32,16 @@ class userController {
     if (!user) {
       return res.status(404).json({ message: "User not found!" });
     }
+    if (!user.stats) {
+      throw new Error("User stats not found");
+    }
 
     const userInfo = {
       username: user.username,
       email: user.email,
       xp: user.stats?.xp,
       level: user.stats?.level,
+      levelXp: this.userService.countUserCurrentLvlXp(user.stats?.level),
       streak: user.stats?.streak,
     };
 

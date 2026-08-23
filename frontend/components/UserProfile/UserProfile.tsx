@@ -11,6 +11,7 @@ const UserProfile = () => {
     email,
     username,
     xp,
+    levelXp,
     level,
     streak,
   } = useUserStore();
@@ -18,7 +19,7 @@ const UserProfile = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const user = await userService.getMe();
+        const user = await userService.getUserInfo();
         setUserProfile(user);
       } catch (error) {
         clearUserProfile();
@@ -76,13 +77,15 @@ const UserProfile = () => {
           <div className="flex items-center justify-between text-xs">
             <span className="text-[var(--color-text-muted)]">Досвід</span>
             <span className="font-medium text-[var(--color-brand)]">
-              {level * 1.6 * 100} XP
+              {levelXp} XP
             </span>
           </div>
           <div className="w-full h-1.5 rounded-full bg-[var(--color-surface-raised)]">
             <div
               className="h-full rounded-full bg-[var(--color-brand)] transition-all duration-500"
-              style={{ width: `${(xp / (level * 1.6 * 100)) * 100}%` }}
+              style={{
+                width: `${Math.round((xp / levelXp) * 100)}%`,
+              }}
             />
           </div>
         </div>

@@ -18,6 +18,9 @@ class userService {
     });
     return user;
   };
+  countUserCurrentLvlXp = (level: number) => {
+    return Math.round(level * 1.6 * 100);
+  };
   getUsersRating = async () => {
     const users = await prisma.user.findMany({
       select: {

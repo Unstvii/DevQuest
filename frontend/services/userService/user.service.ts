@@ -5,6 +5,7 @@ interface UserProfileResponse {
   username: string;
   xp: number;
   level: number;
+  levelXp: number;
   streak: number;
 }
 export type UserRating = Pick<
@@ -13,7 +14,7 @@ export type UserRating = Pick<
 >;
 
 export const userService = {
-  getMe: async (): Promise<UserProfileResponse> => {
+  getUserInfo: async (): Promise<UserProfileResponse> => {
     const response = await api.get<UserProfileResponse>("/user");
     return response.data;
   },
