@@ -9,10 +9,7 @@ class userService {
     const users = await prisma.user.findMany({
       select: {
         username: true,
-        level: true,
-        streak: true,
       },
-      orderBy: { level: "desc" },
       take: 10,
     });
     return users;

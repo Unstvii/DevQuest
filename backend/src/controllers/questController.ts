@@ -58,15 +58,23 @@ export class QuestController {
     try {
       const id = req.params.id;
       const userId = req.user!.id;
+
       const updatedQuest = await this.questService.updateQuestStatus(
         id,
         userId,
         req.body,
       );
-      await this.questService.updateStreak(id, userId, req.body);
-      return res.status(200).json({ quest: updatedQuest });
+
+      return res.status(200).json({
+        quest: updatedQuest,
+      });
     } catch (error) {
-      return res.status(400).json({ message: "Quest not updated" });
+      console.error("UPDATE QUEST STATUS ERROR:", error);
+
+      return res.status(400).json({
+        message: "Quest not updated",
+        error: error instanceof Error ? error.message : String(error),
+      });
     }
   };
 

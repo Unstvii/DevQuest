@@ -8,12 +8,14 @@ type AchievementCardProps = {
   description: string;
   emoji: string;
   id: string;
+  isUnlocked: boolean;
 };
 
 const AchievementCard = ({
   name,
   description,
   emoji,
+  isUnlocked,
   id,
 }: AchievementCardProps) => {
   return (
@@ -22,7 +24,7 @@ const AchievementCard = ({
         group relative overflow-hidden rounded-2xl border
         p-5 transition-all duration-300
         ${
-          id
+          isUnlocked
             ? `
               border-(--color-brand)/30
               bg-(--color-brand)/10
@@ -42,7 +44,7 @@ const AchievementCard = ({
         }
       `}
     >
-      {id && (
+      {isUnlocked && (
         <div
           className="
             pointer-events-none absolute -right-12 -top-12
@@ -59,7 +61,7 @@ const AchievementCard = ({
             flex h-12 w-12 shrink-0 items-center justify-center
             rounded-xl text-xl transition-all duration-300
             ${
-              id
+              isUnlocked
                 ? `
                   bg-(--color-brand)
                   text-white
@@ -91,7 +93,7 @@ const AchievementCard = ({
               {name}
             </h3>
 
-            {id && (
+            {isUnlocked && (
               <span
                 className="
                   shrink-0 rounded-full
@@ -127,7 +129,7 @@ const AchievementCard = ({
           <div
             className={`
               h-full rounded-full transition-all duration-500
-              ${id ? "w-full bg-(--color-brand)" : "w-0 bg-(--color-brand)"}
+              ${isUnlocked ? "w-full bg-(--color-brand)" : "w-0 bg-(--color-brand)"}
             `}
           />
         </div>
@@ -135,10 +137,10 @@ const AchievementCard = ({
         <span
           className={`
             text-xs font-medium
-            ${id ? "text-(--color-brand)" : "text-(--color-text-disabled)"}
+            ${isUnlocked ? "text-(--color-brand)" : "text-(--color-text-disabled)"}
           `}
         >
-          {id ? "100%" : "0%"}
+          {isUnlocked ? "100%" : "0%"}
         </span>
       </div>
     </article>
@@ -208,11 +210,11 @@ const Page = () => {
         >
           {achievement.map((item) => (
             <AchievementCard
-              key={item.id}
               name={item.name}
               description={item.description}
               emoji={item.emoji}
               id={item.id}
+              isUnlocked={item.isCompleted}
             />
           ))}
         </div>

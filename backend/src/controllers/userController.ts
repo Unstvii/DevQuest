@@ -15,7 +15,7 @@ class userController {
     }
   };
 
-  getMe = async (req: Request, res: Response) => {
+  getUserInfo = async (req: Request, res: Response) => {
     const accessToken = req.cookies.accessToken;
 
     if (!accessToken) {

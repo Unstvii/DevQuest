@@ -45,61 +45,80 @@ export class QuestService {
   ) {
     const existingQuest = await prisma.quest.findFirst({
       where: {
-        id: id,
-        userId: userId,
-      },
-    });
-    if (!existingQuest) return null;
-    const user = await prisma.user.findUnique({
-      where: {
-        id: userId,
+        id,
+        userId,
       },
     });
 
-    if (data.status === "COMPLETED") {
-      if (!existingQuest.completedAt) {
-        if (!user) {
-          return;
-        }
-        const lvlProgress = (user.level + 1.6) * 100;
-        const IsUserLvlUp = this.checklvlUp(
-          user?.xp,
-          existingQuest.xpReward,
-          lvlProgress,
-        );
-
-        const xpRewardWithLevelUp =
-          user.xp + existingQuest.xpReward - lvlProgress;
-        if (IsUserLvlUp) {
-          await prisma.user.update({
-            where: { id: userId },
-            data: {
-              level: {
-                increment: 1,
-              },
-              xp: xpRewardWithLevelUp,
-            },
-          });
-        } else {
-          await prisma.user.update({
-            where: { id: userId },
-            data: {
-              xp: {
-                increment: existingQuest.xpReward,
-              },
-            },
-          });
-        }
-
-        const date = new Date();
-        return await prisma.quest.update({
-          where: { id },
-          data: { status: data.status, completedAt: date },
-        });
-      }
+    if (!existingQuest) {
+      throw new Error("Quest not found");
     }
 
-    return await prisma.quest.update({ where: { id }, data });
+    const user = await prisma.userStats.findUnique({
+      where: {
+        userId,
+      },
+    });
+
+    if (!user) {
+      throw new Error("User stats not found");
+    }
+
+    if (data.status === "COMPLETED" && !existingQuest.completedAt) {
+      const lvlProgress = (user.level + 1.6) * 100;
+
+      const isUserLvlUp = this.checklvlUp(
+        user.xp,
+        existingQuest.xpReward,
+        lvlProgress,
+      );
+
+      if (isUserLvlUp) {
+        const newXp = user.xp + existingQuest.xpReward - lvlProgress;
+
+        await prisma.userStats.update({
+          where: {
+            userId,
+          },
+          data: {
+            level: {
+              increment: 1,
+            },
+            xp: newXp,
+          },
+        });
+      } else {
+        await prisma.userStats.update({
+          where: {
+            userId,
+          },
+          data: {
+            xp: {
+              increment: existingQuest.xpReward,
+            },
+          },
+        });
+      }
+
+      return await prisma.quest.update({
+        where: {
+          id,
+        },
+        data: {
+          status: "COMPLETED",
+          completedAt: new Date(),
+        },
+      });
+    }
+
+    return await prisma.quest.update({
+      where: {
+        id,
+      },
+      data: {
+        status: data.status,
+      },
+    });
   }
   checklvlUp(userXP: number, questReward: number, lvlProgress: number) {
     if (lvlProgress <= userXP + questReward) {
@@ -111,16 +130,16 @@ export class QuestService {
     if (data.status != "COMPLETED") {
       return;
     }
-    const user = await prisma.user.findUnique({
+    const user = await prisma.userStats.findUnique({
       where: {
         id: userId,
       },
     });
     if (!user) {
-      return;
+      throw new Error("User stats not found");
     }
     if (!user.lastStreakDate) {
-      await prisma.user.update({
+      await prisma.userStats.update({
         where: { id: userId },
         data: { streak: 1, lastStreakDate: new Date() },
       });
@@ -133,7 +152,7 @@ export class QuestService {
     }
 
     if (diffDays === 1) {
-      await prisma.user.update({
+      await prisma.userStats.update({
         where: { id: userId },
         data: { streak: { increment: 1 }, lastStreakDate: new Date() },
       });
@@ -141,7 +160,7 @@ export class QuestService {
     }
 
     if (diffDays > 1) {
-      await prisma.user.update({
+      await prisma.userStats.update({
         where: { id: userId },
         data: { streak: 1, lastStreakDate: new Date() },
       });

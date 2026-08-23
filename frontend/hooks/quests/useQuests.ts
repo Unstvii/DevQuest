@@ -1,21 +1,24 @@
 import { useEffect, useState } from "react";
 import {
+  Quest,
+  QuestStatus,
   QuestUpdate,
   useQuestStore,
-  QuestStatus,
 } from "@/store/quests/quests.store";
-import { questService } from "../../services/questService/quest.service";
-import { Quest } from "@/store/quests/quests.store";
-import { useStoreWithEqualityFn } from "zustand/traditional";
+import { questService } from "@/services/questService/quest.service";
 
 const useQuests = () => {
-  const { quests, setQuests } = useQuestStore();
+  const quests = useQuestStore((state) => state.quests);
+  const setQuests = useQuestStore((state) => state.setQuests);
+
   const [search, setSearch] = useState("");
 
+  // GET ALL QUESTS
   useEffect(() => {
     const fetchQuests = async () => {
       try {
         const { data } = await questService.getAllQuests();
+
         setQuests(data);
       } catch (error) {
         console.error("[useQuests] Failed to fetch quests:", error);
@@ -25,11 +28,27 @@ const useQuests = () => {
     fetchQuests();
   }, []);
 
+  // UPDATE QUEST STATUS
   const updateQuestStatus = async (id: string, status: QuestStatus) => {
     try {
-      const updated = await questService.updateQuestStatus(id, status);
+      console.log("➡️ UPDATE STATUS REQUEST:", {
+        id,
+        status,
+      });
+
+      const response = await questService.updateQuestStatus(id, status);
+
+      console.log("⬅️ UPDATE STATUS RESPONSE:", response);
+      console.log("⬅️ RESPONSE DATA:", response.data);
+      console.log("⬅️ RESPONSE QUEST:", response.data?.quest);
+
+      if (!response.data?.quest) {
+        console.error("❌ Backend did not return quest:", response.data);
+        return;
+      }
+
       setQuests((prev) =>
-        prev.map((q) => (q.id === id ? updated.data.quest : q)),
+        prev.map((quest) => (quest.id === id ? response.data.quest : quest)),
       );
     } catch (error) {
       console.error(
@@ -39,52 +58,76 @@ const useQuests = () => {
     }
   };
 
+  // CREATE QUEST
   const addQuest = async (quest: Omit<Quest, "id">) => {
     try {
-      const createdQuest = await questService.createQuest(quest);
-      setQuests([...quests, createdQuest.data]);
+      const { data } = await questService.createQuest(quest);
+
+      if (!data) {
+        console.error("[useQuests] Create quest returned empty data");
+        return;
+      }
+
+      setQuests((prev) => [...prev, data]);
     } catch (error) {
-      console.error("[useQuests] Failed to create quests:", error);
+      console.error("[useQuests] Failed to create quest:", error);
     }
   };
 
-  const deleteQuest = async (id: string) => {
-    try {
-      await questService.deleteQuest(id);
-      setQuests((prevQuests) => prevQuests.filter((quest) => quest.id !== id));
-    } catch (error) {
-      console.error("[useQuests] failed to delete quests:", error);
-    }
-  };
-
-  const doneQuestCounter = () => {
-    return {
-      len: quests.reduce(
-        (acc, quest) => (quest.status === "ARCHIVED" ? acc : acc + 1),
-        0,
-      ),
-      done: quests.reduce(
-        (acc, quest) => (quest.status === "COMPLETED" ? acc + 1 : acc),
-        0,
-      ),
-    };
-  };
+  // UPDATE QUEST
   const updateQuest = async (quest: QuestUpdate) => {
     try {
-      const updatedQuest = await questService.updateQuest(quest);
-      setQuests(
-        quests.map((quest) =>
-          quest.id === updatedQuest.data.id ? updatedQuest.data : quest,
+      const { data } = await questService.updateQuest(quest);
+
+      if (!data) {
+        console.error("[useQuests] Update quest returned empty data");
+        return;
+      }
+
+      setQuests((prev) =>
+        prev.map((currentQuest) =>
+          currentQuest.id === data.id ? data : currentQuest,
         ),
       );
     } catch (error) {
-      console.error("[useQuests] Failed to update quests:", error);
+      console.error("[useQuests] Failed to update quest:", error);
     }
   };
 
-  const filteredQuests = quests.filter((q) =>
-    q.title.toLowerCase().includes(search.toLowerCase()),
-  );
+  // DELETE QUEST
+  const deleteQuest = async (id: string) => {
+    try {
+      await questService.deleteQuest(id);
+
+      setQuests((prev) => prev.filter((quest) => quest.id !== id));
+    } catch (error) {
+      console.error("[useQuests] Failed to delete quest:", error);
+    }
+  };
+
+  // QUEST COUNTER
+  const doneQuestCounter = () => {
+    const activeQuests = quests.filter((quest) => quest.status !== "ARCHIVED");
+
+    const completedQuests = quests.filter(
+      (quest) => quest.status === "COMPLETED",
+    );
+
+    return {
+      len: activeQuests.length,
+      done: completedQuests.length,
+    };
+  };
+
+  // SEARCH
+  const filteredQuests = quests.filter((quest) => {
+    if (!quest) {
+      console.error("[useQuests] Invalid quest in state:", quests);
+      return false;
+    }
+
+    return quest.title.toLowerCase().includes(search.toLowerCase());
+  });
 
   return {
     quests,

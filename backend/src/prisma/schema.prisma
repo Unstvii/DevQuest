@@ -42,12 +42,7 @@ model User {
   email        String   @unique
   username     String   @unique
   passwordHash String
-  xp           Int      @default(0)
-  level        Int      @default(1)
 
-  streak          Int       @default(0)
-  lastStreakDate  DateTime?
-  
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
@@ -83,6 +78,11 @@ model UserStats {
   userId String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  xp           Int      @default(0)
+  level        Int      @default(1)
+  streak          Int       @default(0)
+  lastStreakDate  DateTime?
+  
   totalQuestsCompleted Int @default(0)
   totalBossesDefeated  Int @default(0)
   currentStreak        Int @default(0)
@@ -104,6 +104,7 @@ model Achievement {
   conditionValue Int
   isSecret       Boolean             @default(false)
   createdAt      DateTime            @default(now())
+  
 
   userAchievements UserAchievement[]
 
