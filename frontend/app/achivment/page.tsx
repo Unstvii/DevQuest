@@ -7,7 +7,7 @@ type AchievementCardProps = {
   name: string;
   description: string;
   emoji: string;
-  id: string;
+
   isUnlocked: boolean;
 };
 
@@ -16,7 +16,6 @@ const AchievementCard = ({
   description,
   emoji,
   isUnlocked,
-  id,
 }: AchievementCardProps) => {
   return (
     <article
@@ -84,7 +83,7 @@ const AchievementCard = ({
               className={`
                 truncate text-base font-semibold
                 ${
-                  id
+                  isUnlocked
                     ? "text-(--color-text-primary)"
                     : "text-(--color-text-body)"
                 }
@@ -163,7 +162,6 @@ const Page = () => {
     const getAchi = async () => {
       try {
         const getAchivments = await achivmentService.getAllAchivment();
-        console.log(getAchivments);
         setAchievement(getAchivments.data);
       } catch (error) {
         console.error(error);
@@ -210,10 +208,10 @@ const Page = () => {
         >
           {achievement.map((item) => (
             <AchievementCard
+              key={item.id}
               name={item.name}
               description={item.description}
               emoji={item.emoji}
-              id={item.id}
               isUnlocked={item.isCompleted}
             />
           ))}

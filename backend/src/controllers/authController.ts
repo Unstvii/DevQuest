@@ -11,7 +11,6 @@ class authController {
   register = async (req: Request, res: Response) => {
     try {
       const user = await this.authService.register(req.body);
-      console.log(user.email);
       res.status(201).json({ message: "User created", user });
     } catch (error) {
       if (error instanceof Error) {

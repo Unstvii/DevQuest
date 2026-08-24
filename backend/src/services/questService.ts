@@ -74,7 +74,6 @@ export class QuestService {
       );
 
       if (isUserLvlUp) {
-        console.log(existingQuest.xpReward);
         const newXp = user.xp + existingQuest.xpReward - lvlProgress;
 
         await prisma.userStats.update({

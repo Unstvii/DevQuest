@@ -50,8 +50,12 @@ class userController {
   getUsersRating = async (req: Request, res: Response) => {
     try {
       const users = await this.userService.getUsersRating();
-
-      return res.status(200).json(users);
+      const usersRating = users.map((user) => ({
+        username: user.username,
+        level: user.stats?.level,
+        streak: user.stats?.streak,
+      }));
+      return res.status(200).json(usersRating);
     } catch (error) {
       res.status(500).json({ message: "Error get users rating" });
     }

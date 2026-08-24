@@ -4,7 +4,6 @@ import { LoginFormData, RegisterFormData } from "@/utils/shemas";
 
 export const authService = {
   login: (userData: LoginFormData) => {
-    console.log(userData);
     return api.post("/auth/login", userData);
   },
   register: (userData: Omit<RegisterFormData, "confirmPassword">) => {

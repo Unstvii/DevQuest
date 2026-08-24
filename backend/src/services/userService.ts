@@ -25,9 +25,22 @@ class userService {
     const users = await prisma.user.findMany({
       select: {
         username: true,
+        stats: {
+          select: {
+            level: true,
+            streak: true,
+          },
+        },
       },
-      take: 10,
+      orderBy: {
+        stats: {
+          level: "desc",
+        },
+      },
+
+      take: 5,
     });
+    console.log(users);
     return users;
   };
 }
