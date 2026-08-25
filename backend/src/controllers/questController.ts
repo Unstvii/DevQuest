@@ -64,8 +64,11 @@ export class QuestController {
         userId,
         req.body,
       );
-
-      await this.questService.updateStreak(id, userId, req.body);
+      if (updatedQuest.status === "COMPLETED") {
+        await this.questService.updateStreak(id, userId, req.body);
+        await this.questService.updateQuestCounter(userId, updatedQuest.type);
+        await this.questService.checkAchievements(userId);
+      }
 
       return res.status(200).json({
         quest: updatedQuest,

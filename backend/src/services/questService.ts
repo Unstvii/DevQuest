@@ -3,10 +3,10 @@ import { Quest, UpdateQuestDto } from "../models/quest";
 import { differenceInCalendarDays } from "date-fns";
 
 export class QuestService {
-  async getAll(id: string) {
+  async getAll(userId: string) {
     return await prisma.quest.findMany({
       where: {
-        userId: id,
+        userId,
       },
     });
   }
@@ -127,9 +127,6 @@ export class QuestService {
     return false;
   }
   async updateStreak(id: string, userId: string, data: UpdateQuestDto) {
-    if (data.status != "COMPLETED") {
-      return;
-    }
     const user = await prisma.userStats.findUnique({
       where: {
         userId,
@@ -176,4 +173,121 @@ export class QuestService {
 
     return await prisma.quest.delete({ where: { id, userId: userId } });
   }
+  getUserStats = async (userId: string) => {
+    const userStats = await prisma.userStats.findUnique({
+      where: {
+        userId,
+      },
+    });
+    return userStats;
+  };
+  checkAchievements = async (userId: string) => {
+    const stats = await this.getUserStats(userId);
+    if (!stats) {
+      return;
+    }
+    await this.checkLevelAchievements(userId, stats.level);
+    await this.checkStreakAchievements(userId, stats.streak);
+    await this.checkQuestAchievements(userId, stats.totalQuestsCompleted);
+  };
+  updateQuestCounter = async (userId: string, questType: "NORMAL" | "BOSS") => {
+    await prisma.userStats.update({
+      where: {
+        userId,
+      },
+      data: {
+        totalQuestsCompleted: {
+          increment: 1,
+        },
+
+        ...(questType === "BOSS" && {
+          totalBossesDefeated: {
+            increment: 1,
+          },
+        }),
+      },
+    });
+  };
+
+  checkLevelAchievements = async (userId: string, level: number) => {
+    if (level >= 5) {
+      await this.grantAchievement(userId, "LEVEL_5");
+    }
+
+    if (level >= 10) {
+      await this.grantAchievement(userId, "LEVEL_10");
+    }
+
+    if (level >= 15) {
+      await this.grantAchievement(userId, "LEVEL_15");
+    }
+  };
+  checkStreakAchievements = async (userId: string, streak: number) => {
+    if (streak >= 3) {
+      await this.grantAchievement(userId, "STREAK_3");
+    }
+    if (streak >= 7) {
+      await this.grantAchievement(userId, "STREAK_7");
+    }
+    if (streak >= 14) {
+      await this.grantAchievement(userId, "STREAK_14");
+    }
+    if (streak >= 30) {
+      await this.grantAchievement(userId, "STREAK_30");
+    }
+  };
+  checkQuestAchievements = async (
+    userId: string,
+    totalQuestsCompleted: number,
+  ) => {
+    if (totalQuestsCompleted >= 1) {
+      await this.grantAchievement(userId, "FIRST_QUEST");
+    }
+    if (totalQuestsCompleted >= 5) {
+      await this.grantAchievement(userId, "QUESTS_5");
+    }
+    if (totalQuestsCompleted >= 10) {
+      await this.grantAchievement(userId, "QUESTS_10");
+    }
+    if (totalQuestsCompleted >= 25) {
+      await this.grantAchievement(userId, "QUESTS_25");
+    }
+    if (totalQuestsCompleted >= 50) {
+      await this.grantAchievement(userId, "QUESTS_50");
+    }
+    if (totalQuestsCompleted >= 100) {
+      await this.grantAchievement(userId, "QUESTS_100");
+    }
+  };
+  grantAchievement = async (userId: string, achievementKey: string) => {
+    const achievement = await prisma.achievement.findUnique({
+      where: {
+        key: achievementKey,
+      },
+    });
+
+    if (!achievement) {
+      throw new Error("Achievement not found");
+    }
+
+    const existingAchievement = await prisma.userAchievement.findUnique({
+      where: {
+        userId_achievementId: {
+          userId,
+          achievementId: achievement.id,
+        },
+      },
+    });
+
+    if (existingAchievement) {
+      return null;
+    }
+
+    return prisma.userAchievement.create({
+      data: {
+        userId,
+        achievementId: achievement.id,
+      },
+    });
+  };
 }
