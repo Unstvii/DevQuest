@@ -181,14 +181,19 @@ export class QuestService {
     });
     return userStats;
   };
-  checkAchievements = async (userId: string) => {
+  checkAchievements = async (userId: string, questType: "NORMAL" | "BOSS") => {
     const stats = await this.getUserStats(userId);
     if (!stats) {
       return;
     }
     await this.checkLevelAchievements(userId, stats.level);
     await this.checkStreakAchievements(userId, stats.streak);
-    await this.checkQuestAchievements(userId, stats.totalQuestsCompleted);
+    await this.checkQuestAchievements(
+      userId,
+      stats.totalQuestsCompleted,
+      stats.totalBossesDefeated,
+      questType,
+    );
   };
   updateQuestCounter = async (userId: string, questType: "NORMAL" | "BOSS") => {
     await prisma.userStats.update({
@@ -239,24 +244,53 @@ export class QuestService {
   checkQuestAchievements = async (
     userId: string,
     totalQuestsCompleted: number,
+    totalBossesDefeated: number,
+    questType: "NORMAL" | "BOSS",
   ) => {
-    if (totalQuestsCompleted >= 1) {
-      await this.grantAchievement(userId, "FIRST_QUEST");
+    if (totalQuestsCompleted + totalBossesDefeated >= 10) {
+      await this.grantAchievement(userId, "TOTAL_QUESTS_10");
     }
-    if (totalQuestsCompleted >= 5) {
-      await this.grantAchievement(userId, "QUESTS_5");
+
+    if (totalQuestsCompleted + totalBossesDefeated >= 50) {
+      await this.grantAchievement(userId, "TOTAL_QUESTS_50");
     }
-    if (totalQuestsCompleted >= 10) {
-      await this.grantAchievement(userId, "QUESTS_10");
+
+    if (totalQuestsCompleted + totalBossesDefeated >= 100) {
+      await this.grantAchievement(userId, "TOTAL_QUESTS_100");
     }
-    if (totalQuestsCompleted >= 25) {
-      await this.grantAchievement(userId, "QUESTS_25");
+    if (questType === "NORMAL") {
+      if (totalQuestsCompleted >= 1) {
+        await this.grantAchievement(userId, "FIRST_QUEST");
+      }
+      if (totalQuestsCompleted >= 5) {
+        await this.grantAchievement(userId, "QUESTS_5");
+      }
+      if (totalQuestsCompleted >= 10) {
+        await this.grantAchievement(userId, "QUESTS_10");
+      }
+      if (totalQuestsCompleted >= 25) {
+        await this.grantAchievement(userId, "QUESTS_25");
+      }
+      if (totalQuestsCompleted >= 50) {
+        await this.grantAchievement(userId, "QUESTS_50");
+      }
+      if (totalQuestsCompleted >= 100) {
+        await this.grantAchievement(userId, "QUESTS_100");
+      }
     }
-    if (totalQuestsCompleted >= 50) {
-      await this.grantAchievement(userId, "QUESTS_50");
-    }
-    if (totalQuestsCompleted >= 100) {
-      await this.grantAchievement(userId, "QUESTS_100");
+    if (questType === "BOSS") {
+      if (totalBossesDefeated >= 1) {
+        await this.grantAchievement(userId, "FIRST_BOSS");
+      }
+      if (totalBossesDefeated >= 5) {
+        await this.grantAchievement(userId, "BOSS_5");
+      }
+      if (totalBossesDefeated >= 10) {
+        await this.grantAchievement(userId, "BOSS_10");
+      }
+      if (totalBossesDefeated >= 25) {
+        await this.grantAchievement(userId, "BOSS_25");
+      }
     }
   };
   grantAchievement = async (userId: string, achievementKey: string) => {

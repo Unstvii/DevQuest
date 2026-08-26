@@ -7,8 +7,10 @@ type AchievementCardProps = {
   name: string;
   description: string;
   emoji: string;
-
   isUnlocked: boolean;
+  progress: number;
+  target: number;
+  progressPercentage: number;
 };
 
 const AchievementCard = ({
@@ -16,6 +18,9 @@ const AchievementCard = ({
   description,
   emoji,
   isUnlocked,
+  progress,
+  target,
+  progressPercentage,
 }: AchievementCardProps) => {
   return (
     <article
@@ -81,7 +86,7 @@ const AchievementCard = ({
           <div className="mb-1 flex items-center justify-between gap-3">
             <h3
               className={`
-                truncate text-base font-semibold
+                truncate text-base font-semibold line-clamp-2
                 ${
                   isUnlocked
                     ? "text-(--color-text-primary)"
@@ -95,14 +100,13 @@ const AchievementCard = ({
             {isUnlocked && (
               <span
                 className="
-                  shrink-0 rounded-full
-                  bg-(--color-success)/10
-                  px-2.5 py-1
-                  text-xs font-medium
-                  text-(--color-success)
-                "
+      flex h-6 w-6 shrink-0 items-center justify-center
+      rounded-md
+      bg-(--color-success)/10
+      text-(--color-success)
+    "
               >
-                Виконано
+                ✓
               </span>
             )}
           </div>
@@ -119,17 +123,12 @@ const AchievementCard = ({
       </div>
 
       <div className="relative mt-5 flex items-center gap-2">
-        <div
-          className={`
-            h-1.5 flex-1 overflow-hidden rounded-full
-            bg-(--color-surface-raised)
-          `}
-        >
+        <div className="h-1.5 w-full overflow-hidden rounded-full bg-[var(--color-surface-raised)]">
           <div
-            className={`
-              h-full rounded-full transition-all duration-500
-              ${isUnlocked ? "w-full bg-(--color-brand)" : "w-0 bg-(--color-brand)"}
-            `}
+            className="h-full rounded-full bg-[var(--color-brand)] transition-all duration-500"
+            style={{
+              width: `${progressPercentage}%`,
+            }}
           />
         </div>
 
@@ -139,7 +138,7 @@ const AchievementCard = ({
             ${isUnlocked ? "text-(--color-brand)" : "text-(--color-text-disabled)"}
           `}
         >
-          {isUnlocked ? "100%" : "0%"}
+          {isUnlocked ? "100%" : `${progressPercentage}%`}
         </span>
       </div>
     </article>
@@ -151,12 +150,15 @@ const Page = () => {
     name: string;
     description: string;
     emoji: string;
-    isCompleted: boolean;
+    isUnlocked: boolean;
     id: string;
+    progress: number;
+    target: number;
+    progressPercentage: number;
   };
   const [achievement, setAchievement] = useState<Achievement[]>([]);
   const completedCount = achievement.filter(
-    (achievement) => achievement.isCompleted,
+    (achievement) => achievement.isUnlocked,
   ).length;
   useEffect(() => {
     const getAchi = async () => {
@@ -212,7 +214,10 @@ const Page = () => {
               name={item.name}
               description={item.description}
               emoji={item.emoji}
-              isUnlocked={item.isCompleted}
+              isUnlocked={item.isUnlocked}
+              progress={item.progress}
+              target={item.target}
+              progressPercentage={item.progressPercentage}
             />
           ))}
         </div>
