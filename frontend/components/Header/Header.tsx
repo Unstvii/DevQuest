@@ -4,15 +4,21 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { authService } from "@/services/authService/auth.service";
 import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/store/auth/auth.store";
 
 const Header = () => {
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const setIsAuthenticated = useAuthStore((state) => state.setIsAuthenticated);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
   const handleLogout = async () => {
     await authService.logout();
+    setIsAuthenticated(false);
+    router.push("/");
+  };
+  const loginRedirect = async () => {
     router.push("/login");
   };
-
   const navigationItems = [
     { href: "/quests", label: "Квести", icon: "🎮", iconColor: "#8b5cf6" },
     {
@@ -82,16 +88,29 @@ const Header = () => {
                 <span>{item.label}</span>
               </Link>
             ))}
-            <button
-              onClick={handleLogout}
-              className="px-4 py-2 rounded-lg flex items-center gap-2 transition-all duration-300"
-              style={navLinkStyle}
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-            >
-              <span style={{ color: "#ef4444" }}>🚪</span>
-              <span>Вийти</span>
-            </button>
+            {isAuthenticated ? (
+              <button
+                onClick={handleLogout}
+                className="px-4 py-2 rounded-lg flex items-center gap-2 transition-all duration-300"
+                style={navLinkStyle}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+              >
+                <span style={{ color: "#ef4444" }}>🚪</span>
+                <span>Вийти</span>
+              </button>
+            ) : (
+              <button
+                onClick={loginRedirect}
+                className="px-4 py-2 rounded-lg flex items-center gap-2 transition-all duration-300"
+                style={navLinkStyle}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+              >
+                <span style={{ color: "#ef4444" }}>🚪</span>
+                <span>Ввійти</span>
+              </button>
+            )}
           </nav>
           <button
             onClick={toggleMenu}

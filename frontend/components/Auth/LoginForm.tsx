@@ -7,6 +7,7 @@ import { loginSchema, type LoginFormData } from "../../utils/shemas";
 import { authService } from "../../services/authService/auth.service";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useAuthStore } from "@/store/auth/auth.store";
 export default function LoginForm() {
   const router = useRouter();
   const {
@@ -16,11 +17,12 @@ export default function LoginForm() {
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   });
+  const setIsAuthenticated = useAuthStore((state) => state.setIsAuthenticated);
   const onSubmit = async (userLoginData: LoginFormData) => {
     try {
       const response = await authService.login(userLoginData);
       toast.success("Ласкаво просимо!");
-
+      setIsAuthenticated(true);
       router.push("/quests");
     } catch (error) {
       toast.error("Невірний email або пароль");
