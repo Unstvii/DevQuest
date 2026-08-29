@@ -28,17 +28,18 @@ class authController {
       const { accessToken, refreshToken } = await this.authService.login(
         req.body,
       );
+      const isProdustion = process.env.NODE_ENV === "production";
 
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
-        secure: false,
-        sameSite: "lax",
+        secure: isProdustion,
+        sameSite: isProdustion ? "none" : "lax",
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
       res.cookie("accessToken", accessToken, {
         httpOnly: true,
-        secure: false,
-        sameSite: "lax",
+        secure: isProdustion,
+        sameSite: isProdustion ? "none" : "lax",
         maxAge: 60 * 60 * 1000,
       });
 
