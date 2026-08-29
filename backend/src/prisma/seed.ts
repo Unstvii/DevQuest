@@ -208,61 +208,6 @@ const achievements = [
   },
 
   // =========================
-  // XP
-  // =========================
-
-  {
-    key: "XP_100",
-    name: "Перші XP",
-    description: "Зароби 100 XP",
-    emoji: "✨",
-    category: AchievementCategory.XP,
-    conditionType: ConditionType.XP_EARNED,
-    conditionValue: 100,
-    isSecret: false,
-  },
-  {
-    key: "XP_500",
-    name: "XP набирається",
-    description: "Зароби 500 XP",
-    emoji: "⚡",
-    category: AchievementCategory.XP,
-    conditionType: ConditionType.XP_EARNED,
-    conditionValue: 500,
-    isSecret: false,
-  },
-  {
-    key: "XP_1000",
-    name: "Тисячник",
-    description: "Зароби 1000 XP",
-    emoji: "💰",
-    category: AchievementCategory.XP,
-    conditionType: ConditionType.XP_EARNED,
-    conditionValue: 1000,
-    isSecret: false,
-  },
-  {
-    key: "XP_5000",
-    name: "XP-машина",
-    description: "Зароби 5000 XP",
-    emoji: "🚀",
-    category: AchievementCategory.XP,
-    conditionType: ConditionType.XP_EARNED,
-    conditionValue: 5000,
-    isSecret: false,
-  },
-  {
-    key: "XP_10000",
-    name: "Легендарний досвід",
-    description: "Зароби 10000 XP",
-    emoji: "🌟",
-    category: AchievementCategory.XP,
-    conditionType: ConditionType.XP_EARNED,
-    conditionValue: 10000,
-    isSecret: false,
-  },
-
-  // =========================
   // STREAK
   // =========================
 

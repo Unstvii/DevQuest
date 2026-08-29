@@ -3,7 +3,7 @@
 import { Crown, Flame, Trophy, Medal } from "lucide-react";
 import { userService } from "../../services/userService/user.service";
 import { UserRating } from "../../services/userService/user.service";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 const page = () => {
   const [users, setUsers] = useState<UserRating[]>([]);
@@ -19,13 +19,13 @@ const page = () => {
     fetchUsers();
   }, []);
   return (
-    <div className="bg-[var(--color-bg-base)] pt-30">
-      <div className="space-y-5 w-[63.5%] my-0 mx-auto h-[90vh]">
-        <h1 className="text-3xl font-bold text-[var(--color-text-primary)]">
+    <div className="bg-[var(--color-bg-base)] pt-20 sm:pt-24 lg:pt-30">
+      <div className="w-[92%] sm:w-[88%] lg:w-[63.5%] my-0 mx-auto min-h-[90vh] space-y-5">
+        <h1 className="text-2xl sm:text-3xl font-bold text-[var(--color-text-primary)]">
           Leaderboard
         </h1>
 
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           {users.map((user, index) => {
             const top =
               index === 0
@@ -39,88 +39,124 @@ const page = () => {
             return (
               <div
                 key={index}
-                className={`group
-                    rounded-2xl
-                    border
-                    ${top}
-                    border-[var(--color-border)]
-                    bg-[var(--color-surface)]
-                    hover:bg-[var(--color-surface-raised)]
-                    transition-all
-                    duration-300
-                    px-6
-                    py-4
-                    flex
-                    items-center
-                    gap-5
-                    hover:scale-[1.01]
-                    hover:border-[var(--color-border-hover)]`}
+                className={`
+              group
+              rounded-xl sm:rounded-2xl
+              border
+              ${top}
+              border-[var(--color-border)]
+              bg-[var(--color-surface)]
+              hover:bg-[var(--color-surface-raised)]
+              transition-all
+              duration-300
+              px-3 py-3
+              sm:px-4 sm:py-4
+              lg:px-6
+              flex items-center
+              gap-3 sm:gap-4 lg:gap-5
+              hover:scale-[1.01]
+              hover:border-[var(--color-border-hover)]
+            `}
               >
-                <div className="w-10 flex justify-center">
+                <div className="w-7 sm:w-8 lg:w-10 shrink-0 flex justify-center">
                   {index === 0 && (
-                    <Crown className="text-yellow-400" size={24} />
+                    <Crown className="text-yellow-400" size={22} />
                   )}
 
                   {index === 1 && (
-                    <Trophy className="text-gray-300" size={22} />
+                    <Trophy className="text-gray-300" size={20} />
                   )}
 
                   {index === 2 && (
-                    <Medal className="text-orange-400" size={22} />
+                    <Medal className="text-orange-400" size={20} />
                   )}
 
                   {index > 2 && (
-                    <span className="font-bold text-lg text-[var(--color-text-muted)]">
+                    <span className="font-bold text-sm sm:text-base lg:text-lg text-[var(--color-text-muted)]">
                       #{index + 1}
                     </span>
                   )}
                 </div>
-
                 <img
                   src={`https://api.dicebear.com/9.x/thumbs/svg?seed=${user.username}`}
-                  className="w-14 h-14 rounded-full border border-[var(--color-border)]"
+                  alt={user.username}
+                  className="
+                shrink-0
+                w-10 h-10
+                sm:w-12 sm:h-12
+                lg:w-14 lg:h-14
+                rounded-full
+                border border-[var(--color-border)]
+              "
                 />
-
-                <div className="flex-1">
-                  <div className="font-semibold text-lg text-[var(--color-text-primary)]">
+                <div className="min-w-0 flex-1">
+                  <div
+                    className="
+                truncate
+                font-semibold
+                text-sm sm:text-base lg:text-lg
+                text-[var(--color-text-primary)]
+              "
+                  >
                     {user.username}
                   </div>
 
-                  <div className="text-sm text-[var(--color-text-muted)]">
+                  <div
+                    className="
+                text-xs sm:text-sm
+                text-[var(--color-text-muted)]
+              "
+                  >
                     Developer
                   </div>
                 </div>
-
                 <div
                   className="
-                        px-4
-                        py-2
-                        rounded-xl
-                        bg-[var(--color-brand)]/10
-                        border
-                        border-[var(--color-border)]
-                    "
+              shrink-0
+              px-2.5 py-1.5
+              sm:px-3 sm:py-2
+              lg:px-4
+              rounded-lg sm:rounded-xl
+              bg-[var(--color-brand)]/10
+              border border-[var(--color-border)]
+            "
                 >
-                  <span className="text-[var(--color-brand)] font-bold">
+                  <span
+                    className="
+                text-xs sm:text-sm
+                lg:text-base
+                text-[var(--color-brand)]
+                font-bold
+              "
+                  >
                     LV. {user.level}
                   </span>
                 </div>
-
                 <div
                   className="
-                        flex
-                        items-center
-                        gap-2
-                        px-4
-                        py-2
-                        rounded-xl
-                        bg-orange-500/10
-                        border
-                        border-orange-500/20"
+              shrink-0
+              flex items-center
+              gap-1.5 sm:gap-2
+              px-2.5 py-1.5
+              sm:px-3 sm:py-2
+              lg:px-4
+              rounded-lg sm:rounded-xl
+              bg-orange-500/10
+              border border-orange-500/20
+            "
                 >
-                  <Flame size={18} className="text-[var(--color-streak)]" />
+                  <Flame
+                    size={16}
+                    className="sm:w-[18px] sm:h-[18px] text-[var(--color-streak)]"
+                  />
 
-                  <span className="font-semibold text-[var(--color-text-primary)]">
+                  <span
+                    className="
+                text-sm sm:text-base
+                font-semibold
+                text-[var(--color-text-primary)]
+              "
+                  >
                     {user.streak}
                   </span>
                 </div>
