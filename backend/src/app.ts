@@ -8,6 +8,7 @@ import authMiddleware from "./middleware/auth.middleware";
 import achivmentRoutes from "./routes/achivmentRoutes";
 
 const app = express();
+console.log("FRONTEND_URL:", process.env.FRONTEND_URL);
 app.use(
   cors({
     origin: process.env.FRONTEND_URL,
