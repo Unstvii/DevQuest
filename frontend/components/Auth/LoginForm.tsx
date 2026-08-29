@@ -1,5 +1,5 @@
 "use client";
-
+import api from "../../services/axios";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -21,6 +21,8 @@ export default function LoginForm() {
   const onSubmit = async (userLoginData: LoginFormData) => {
     try {
       const response = await authService.login(userLoginData);
+      const userResponse = await api.get("/user");
+      console.log(userResponse.data);
       toast.success("Ласкаво просимо!");
       setIsAuthenticated(true);
       router.push("/quests");
