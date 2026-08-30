@@ -1,17 +1,7 @@
 export default function AuthSkeleton() {
   return (
-    <div className="min-h-screen animate-pulse px-6 py-8">
+    <div className="min-h-screen bg-[var(--color-bg)] animate-pulse px-6 py-8 ">
       <div className="mx-auto max-w-7xl">
-        {/* Header */}
-        <div className="mb-8 flex items-center justify-between">
-          <div className="h-8 w-32 rounded-lg bg-[var(--color-surface-raised)]" />
-
-          <div className="flex gap-3">
-            <div className="h-8 w-20 rounded-lg bg-[var(--color-surface-raised)]" />
-            <div className="h-8 w-8 rounded-full bg-[var(--color-surface-raised)]" />
-          </div>
-        </div>
-
         {/* Title */}
         <div className="mb-6">
           <div className="h-8 w-48 rounded-lg bg-[var(--color-surface-raised)]" />
