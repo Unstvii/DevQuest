@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/auth/auth.store";
-
+import AuthSkeleton from "@/components/AuthSkeleton/AuthSkeleton";
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
@@ -18,11 +18,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
   }, [isAuthLoading, isAuthenticated, router]);
 
   if (isAuthLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="h-6 w-6 animate-spin rounded-full border-2 border-[var(--color-brand)] border-t-transparent" />
-      </div>
-    );
+    return <AuthSkeleton />;
   }
 
   if (!isAuthenticated) {
