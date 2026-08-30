@@ -1,29 +1,31 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import api from "@/services/axios";
+import { useAuthStore } from "@/store/auth/auth.store";
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
-  const [loading, setLoading] = useState(true);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+
+  const isAuthLoading = useAuthStore((state) => state.isAuthLoading);
 
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        await api.get("/user");
+    if (!isAuthLoading && !isAuthenticated) {
+      router.replace("/login");
+    }
+  }, [isAuthLoading, isAuthenticated, router]);
 
-        setLoading(false);
-      } catch {
-        router.replace("/login");
-      }
-    };
+  if (isAuthLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="h-6 w-6 animate-spin rounded-full border-2 border-[var(--color-brand)] border-t-transparent" />
+      </div>
+    );
+  }
 
-    checkAuth();
-  }, [router]);
-
-  if (loading) {
+  if (!isAuthenticated) {
     return null;
   }
 
