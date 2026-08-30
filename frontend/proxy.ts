@@ -40,6 +40,8 @@ export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token = request.cookies.get("accessToken")?.value;
   const refreshToken = request.cookies.get("refreshToken")?.value;
+  console.log("MIDDLEWARE PATH:", request.nextUrl.pathname);
+  console.log("ACCESS TOKEN:", token);
   const isPublic = PUBLIC_ROUTES.includes(pathname);
 
   let hasValidToken = Boolean(token) && !isTokenExpired(token!);
