@@ -1,8 +1,8 @@
 "use client";
 
 import { Crown, Flame, Trophy, Medal } from "lucide-react";
-import { userService } from "../../services/userService/user.service";
-import { UserRating } from "../../services/userService/user.service";
+import { userService } from "@/services/userService/user.service";
+import { UserRating } from "@/services/userService/user.service";
 import { useEffect, useState } from "react";
 
 const page = () => {
