@@ -28,18 +28,17 @@ class authController {
       const { accessToken, refreshToken } = await this.authService.login(
         req.body,
       );
-      const isProdustion = process.env.NODE_ENV === "production";
 
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
-        secure: isProdustion,
-        sameSite: isProdustion ? "none" : "lax",
+        secure: true,
+        sameSite: "none",
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
       res.cookie("accessToken", accessToken, {
         httpOnly: true,
-        secure: isProdustion,
-        sameSite: isProdustion ? "none" : "lax",
+        secure: true,
+        sameSite: "none",
         maxAge: 60 * 60 * 1000,
       });
 
@@ -55,13 +54,13 @@ class authController {
   logout = async (req: Request, res: Response) => {
     res.clearCookie("refreshToken", {
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
+      secure: true,
+      sameSite: "none",
     });
     res.clearCookie("accessToken", {
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
+      secure: true,
+      sameSite: "none",
     });
     res.json({ message: "Logged out" });
   };
@@ -81,8 +80,8 @@ class authController {
       });
       res.cookie("accessToken", accessToken, {
         httpOnly: true,
-        secure: false,
-        sameSite: "lax",
+        secure: true,
+        sameSite: "none",
         maxAge: 60 * 60 * 1000,
       });
       res.status(200).json({ accessToken: accessToken });
