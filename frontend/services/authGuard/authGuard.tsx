@@ -17,12 +17,8 @@ const AuthGuard = ({ children }: { children: React.ReactNode }) => {
     }
   }, [isAuthLoading, isAuthenticated, router]);
 
-  if (isAuthLoading) {
-    return <AuthSkeleton />;
-  }
-
-  if (!isAuthenticated) {
-    return <AuthSkeleton />;
+  if (isAuthLoading || !isAuthenticated) {
+    return <div className="min-h-screen bg-[var(--color-bg)]" />;
   }
 
   return children;
