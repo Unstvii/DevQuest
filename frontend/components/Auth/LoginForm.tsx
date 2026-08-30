@@ -25,7 +25,9 @@ export default function LoginForm() {
       console.log(userResponse.data);
       toast.success("Ласкаво просимо!");
       setIsAuthenticated(true);
+
       router.push("/quests");
+      router.refresh();
     } catch (error) {
       toast.error("Невірний email або пароль");
     }
