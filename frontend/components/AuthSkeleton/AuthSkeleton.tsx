@@ -1,6 +1,6 @@
 export default function AuthSkeleton() {
   return (
-    <div className="min-h-screen bg-[var(--color-bg)] animate-pulse px-6 py-8 ">
+    <div className="min-h-screen bg-[var(--color-bg-base)] animate-pulse px-6 py-8 ">
       <div className="mx-auto max-w-7xl">
         {/* Title */}
         <div className="mb-6">
