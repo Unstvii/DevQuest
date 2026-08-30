@@ -26,8 +26,9 @@ export default function LoginForm() {
       toast.success("Ласкаво просимо!");
       setIsAuthenticated(true);
 
-      router.push("/quests");
-      router.refresh();
+      console.log("BEFORE REDIRECT");
+
+      window.location.href = "/quests";
     } catch (error) {
       toast.error("Невірний email або пароль");
     }
