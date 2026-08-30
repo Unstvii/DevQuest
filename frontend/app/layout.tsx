@@ -5,7 +5,7 @@ import "./globals.css";
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
 import AuthInitializer from "@/components/AuthInitilazer/AuthInitializer";
-
+import AuthGuard from "@/services/authGuard/authGuard";
 import { Toaster } from "sonner";
 
 const geistSans = Geist({
@@ -29,21 +29,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-screen flex flex-col">
-        <AuthInitializer />
+    <AuthGuard>
+      <html
+        lang="en"
+        className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      >
+        <body className="min-h-screen flex flex-col">
+          <AuthInitializer />
 
-        <Header />
+          <Header />
 
-        <main className="flex-1">{children}</main>
+          <main className="flex-1">{children}</main>
 
-        <Toaster richColors position="bottom-right" />
+          <Toaster richColors position="bottom-right" />
 
-        <Footer />
-      </body>
-    </html>
+          <Footer />
+        </body>
+      </html>
+    </AuthGuard>
   );
 }
