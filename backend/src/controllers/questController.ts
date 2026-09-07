@@ -23,7 +23,7 @@ export class QuestController {
         return;
       }
 
-      res.json(quest);
+      res.status(200).json(quest);
     } catch (error) {
       res.status(500).json({ message: "Server error" });
     }
@@ -49,7 +49,7 @@ export class QuestController {
         return;
       }
 
-      res.json(quest);
+      res.status(200).json(quest);
     } catch (error) {
       res.status(500).json({ message: "Server error" });
     }
@@ -91,11 +91,11 @@ export class QuestController {
       const deleted = await this.questService.delete(id, userId);
 
       if (!deleted) {
-        res.status(400).json({ message: "Quest not deleted" });
+        res.status(404).json({ message: "Quest not found" });
         return;
       }
 
-      res.status(204).json({ message: "Quest successfully deleted!" });
+      res.status(200).json({ message: "Quest successfully deleted!" });
     } catch (error) {
       res.status(500).json({ message: "Server error" });
     }

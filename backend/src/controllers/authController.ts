@@ -42,7 +42,7 @@ class authController {
         maxAge: 60 * 60 * 1000,
       });
 
-      res.status(201).json({ message: "Success login!" });
+      res.status(200).json({ message: "Success login!" });
     } catch (error) {
       if (error instanceof Error) {
         res.status(400).json({ message: error.message });
@@ -62,7 +62,7 @@ class authController {
       secure: true,
       sameSite: "none",
     });
-    res.json({ message: "Logged out" });
+    res.json({ message: "Logged out successfully" });
   };
   refreshToken = async (req: Request, res: Response) => {
     try {
@@ -86,7 +86,7 @@ class authController {
       });
       res.status(200).json({ accessToken: accessToken });
     } catch (error) {
-      res.status(403).json({ message: "Token is not valid" });
+      res.status(401).json({ message: "Invalid refresh token" });
     }
   };
 }
