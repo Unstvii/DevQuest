@@ -15,8 +15,10 @@ export class QuestController {
 
   getById = async (req: Request, res: Response) => {
     try {
-      const id = req.params.id;
-      const quest = await this.questService.getById(id);
+      const quest = await this.questService.getById(
+        req.params.id,
+        req.user!.id,
+      );
 
       if (!quest) {
         res.status(404).json({ message: "Quest not found" });

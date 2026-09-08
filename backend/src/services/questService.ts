@@ -11,8 +11,8 @@ export class QuestService {
     });
   }
 
-  async getById(id: string) {
-    return await prisma.quest.findUnique({ where: { id } });
+  async getById(id: string, userId: string) {
+    return await prisma.quest.findUnique({ where: { id, userId } });
   }
 
   async create(userId: string, data: Quest) {
