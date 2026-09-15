@@ -11,11 +11,6 @@ A full-stack gamification platform designed to turn everyday development goals i
 <a href="https://devquesti.netlify.app">
   <img src="https://img.shields.io/badge/🚀_LIVE_DEMO-6366F1?style=for-the-badge" alt="Live Demo" />
 </a>
-&nbsp;
-<a href="https://github.com/Unstvii/DevQuest">
-  <img src="https://img.shields.io/badge/GITHUB-18181B?style=for-the-badge&logo=github" alt="GitHub" />
-</a>
-
 <br />
 <br />
 
