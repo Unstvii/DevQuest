@@ -16,19 +16,7 @@ class userController {
   };
 
   getUserInfo = async (req: Request, res: Response) => {
-    const accessToken = req.cookies.accessToken;
-
-    if (!accessToken) {
-      return res.status(401).json({ message: "Missing token!" });
-    }
-
-    const decoded = this.decodeToken(accessToken);
-
-    if (!decoded || typeof decoded === "string") {
-      return res.status(401).json({ message: "No token found!" });
-    }
-
-    const user = await this.userService.getUserInfo(decoded.id);
+    const user = await this.userService.getUserInfo(req.user!.id);
     if (!user) {
       return res.status(404).json({ message: "User not found!" });
     }
