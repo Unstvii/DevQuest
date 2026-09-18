@@ -21,14 +21,9 @@ export default function LoginForm() {
   const onSubmit = async (userLoginData: LoginFormData) => {
     try {
       const response = await authService.login(userLoginData);
-      const userResponse = await api.get("/user");
-      console.log(userResponse.data);
       toast.success("Ласкаво просимо!");
       setIsAuthenticated(true);
-
-      console.log("BEFORE REDIRECT");
-
-      window.location.href = "/quests";
+      router.push("/quests");
     } catch (error) {
       toast.error("Невірний email або пароль");
     }

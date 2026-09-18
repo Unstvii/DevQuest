@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { loadingStore } from "@/store/loadingStore/loadingStore";
@@ -7,15 +5,21 @@ import { loadingStore } from "@/store/loadingStore/loadingStore";
 const GlobalLoader = () => {
   const activeRequests = loadingStore((state) => state.activeRequests);
 
+  const [isVisible, setIsVisible] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState("Loading...");
 
   const isLoading = activeRequests > 0;
 
   useEffect(() => {
     if (!isLoading) {
+      setIsVisible(false);
       setLoadingMessage("Loading...");
       return;
     }
+
+    const showTimer = setTimeout(() => {
+      setIsVisible(true);
+    }, 2000);
 
     const timer1 = setTimeout(() => {
       setLoadingMessage("Waking up the server...");
@@ -26,12 +30,13 @@ const GlobalLoader = () => {
     }, 10000);
 
     return () => {
+      clearTimeout(showTimer);
       clearTimeout(timer1);
       clearTimeout(timer2);
     };
   }, [isLoading]);
 
-  if (!isLoading) {
+  if (!isVisible) {
     return null;
   }
 

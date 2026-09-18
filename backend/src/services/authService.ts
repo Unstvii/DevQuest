@@ -68,6 +68,9 @@ class authService {
 
     return { accessToken, refreshToken };
   };
+  health = async () => {
+    await prisma.$queryRaw`SELECT 1`;
+  };
 }
 
 export default authService;

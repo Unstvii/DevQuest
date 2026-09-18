@@ -7,6 +7,7 @@ import Footer from "@/components/Footer/Footer";
 import AuthInitializer from "@/components/AuthInitilazer/AuthInitializer";
 import { Toaster } from "sonner";
 import GlobalLoader from "@/components/GlobalLoader/GlobalLoader";
+import ServerWarmup from "@/components/ServerWarmup/ServerWarmup";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -45,6 +46,7 @@ export default function RootLayout({
         <Footer />
       </body>
       <GlobalLoader />
+      <ServerWarmup />
     </html>
   );
 }

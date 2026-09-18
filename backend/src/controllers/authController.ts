@@ -89,6 +89,19 @@ class authController {
       res.status(401).json({ message: "Invalid refresh token" });
     }
   };
+  health = async (req: Request, res: Response) => {
+    try {
+      const check = await this.authService.health();
+
+      res.status(200).json({
+        status: "ok",
+      });
+    } catch (error) {
+      res.status(503).json({
+        status: "error",
+      });
+    }
+  };
 }
 
 export default authController;
