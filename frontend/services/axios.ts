@@ -1,5 +1,7 @@
 import axios, { AxiosError, type InternalAxiosRequestConfig } from "axios";
 
+import { loadingStore } from "@/store/loadingStore/loadingStore";
+
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
   headers: {
@@ -8,8 +10,23 @@ const api = axios.create({
   withCredentials: true,
 });
 
+api.interceptors.request.use(
+  (config) => {
+    loadingStore.getState().startLoading();
+
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  },
+);
+
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    loadingStore.getState().stopLoading();
+
+    return response;
+  },
 
   async (error: AxiosError) => {
     const originalRequest = error.config as InternalAxiosRequestConfig & {
@@ -31,6 +48,8 @@ api.interceptors.response.use(
         return Promise.reject(refreshError);
       }
     }
+
+    loadingStore.getState().stopLoading();
 
     return Promise.reject(error);
   },

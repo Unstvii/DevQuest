@@ -40,14 +40,14 @@ const Home = () => {
             style={{ color: "var(--color-text-primary)" }}
           >
             <Link
-              href="#"
+              href="/quests"
               className="rounded-xl bg-gradient-to-r from-violet-600 to-pink-600 px-7 py-3 font-semibold transition hover:-translate-y-1"
             >
               Створити свій квест →
             </Link>
 
             <Link
-              href="#"
+              href="/rating"
               className="rounded-xl border border-slate-700 px-7 py-3 font-semibold transition hover:border-slate-500"
             >
               Подивитись рейтинг
