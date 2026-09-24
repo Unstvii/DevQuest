@@ -130,13 +130,13 @@ The goal was to build something more representative of a real-world application 
 
 ## 🖥️ Screenshots
 
-### Dashboard
+### Hero
 
 <p align="center">
-  <img src="./docs/screenshots/dashboard.png" alt="DevQuest Dashboard" width="900" />
+  <img src="./docs/screenshots/hero.png" alt="DevQuest Dashboard" width="900" />
 </p>
 
-### Quest Management
+### Quests
 
 <p align="center">
   <img src="./docs/screenshots/quests.png" alt="DevQuest Quest Management" width="900" />
@@ -146,12 +146,6 @@ The goal was to build something more representative of a real-world application 
 
 <p align="center">
   <img src="./docs/screenshots/achievements.png" alt="DevQuest Achievements" width="900" />
-</p>
-
-### Leaderboard
-
-<p align="center">
-  <img src="./docs/screenshots/leaderboard.png" alt="DevQuest Leaderboard" width="900" />
 </p>
 
 ---
