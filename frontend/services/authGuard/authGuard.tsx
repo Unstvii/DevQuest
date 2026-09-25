@@ -3,7 +3,6 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/auth/auth.store";
-import AuthSkeleton from "@/components/AuthSkeleton/AuthSkeleton";
 const AuthGuard = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
 
