@@ -7,8 +7,11 @@ import { authService } from "../../services/authService/auth.service";
 import { useRouter } from "next/navigation";
 import { registerSchema, type RegisterFormData } from "../../utils/shemas";
 import Link from "next/link";
+import { useState } from "react";
+import Loader from "../Loader/Loader";
 
 export default function RegisterForm() {
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const {
     register,
@@ -19,13 +22,17 @@ export default function RegisterForm() {
   });
   const onSubmit = async (userRegisterData: RegisterFormData) => {
     try {
+      setIsLoading(true);
       const { confirmPassword, ...userData } = userRegisterData;
       const response = await authService.register(userData);
+
       toast.success("Реєстрація Успішна!");
 
       router.push("/login");
     } catch (error) {
       toast.error("Невірний email або пароль");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -40,6 +47,7 @@ export default function RegisterForm() {
     p-8
   "
     >
+      {isLoading && <Loader />}
       <div className="flex flex-col items-center gap-1">
         <div className="w-10 h-10 rounded-xl bg-[var(--color-brand)] flex items-center justify-center mb-1">
           <svg
@@ -63,8 +71,6 @@ export default function RegisterForm() {
           Раді що обрали нас : )
         </p>
       </div>
-
-      {/* Form */}
 
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3">
         <div className="flex flex-col gap-1">
